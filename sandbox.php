@@ -1,5 +1,5 @@
+<!-- http://localhost/PHPSandbox/sandbox.php -->
 <?php
-
     $HTMLHead = '<!DOCTYPE html>
     <html lang="ja">
     <head>
@@ -14,9 +14,11 @@
 
     // 1次元配列の表示
     $hello = array('test' => 'Hello', 'test2' => 'World', 'test3' => 'every', 'test4' => 'one');
+    // $hello = array('test' => 'Hello', 'test' => 'World', 'test' => 'every', 'test' => 'one');
     $HelloStr = '<table border="1">';
+    $HelloStr = $HelloStr . '<tr><td>KEY</td><td>VALUE</td></tr>';
     foreach($hello as $key => $value)
-        $HelloStr = $HelloStr . '<tr><td>' . $key . '</td><td>' . $value . '</td></tr>';            
+        $HelloStr = $HelloStr . '<tr><td>' . $key . '</td><td>' . $value . '</td></tr>';
     $HelloStr = $HelloStr . '</table><br><br>';
 
     // 2次元配列の表示
@@ -45,6 +47,7 @@
 
     // データ一覧表示
     $details = '<table border="1">';
+    $details = $details . '<tr><td>KEY</td><td>CATEGORY</td><td>NAME</td><td>PRICE</td></tr>';
     foreach($data as $key => $value){
         if(!isset($value['category']) || !isset($value['name']) || !isset($value['price'])) continue;
         $details = $details . '<tr><td>' . $key . '</td><td>' . $value['category'] . '</td><td>' . $value['name'] . '</td><td>' . $value['price'] . '</td></tr>';
@@ -58,38 +61,39 @@
         if(!in_array($value['name'],$nameList))$nameList[] = $value['name'];
     }
     $nameListStr = '<table border="1">';
-    foreach($nameList as $value){
+    $nameListStr = $nameListStr . '<tr><td>VALUE</td></tr>';
+    foreach($nameList as $value)
         $nameListStr = $nameListStr . '<tr><td>' . $value . '</td></tr>';
-    }
     $nameListStr = $nameListStr . '</table><br><br>';
     
-    $itemList = array_keys($data,'やすい屋');
+    // Keyから配列データ取得して表示
+    $itemList = array_keys($data,'1');
     $itemStr = '<table border="1">';
-    foreach($itemList as $value){
+    foreach($itemList as $value)
         $itemStr = $itemStr . '<tr>' . $value . '</tr>';
-    }
     $itemStr = $itemStr . '</table><br><br>';
 
-    // Key一覧表示
+    // 重複有の連想配列
     $keyDictionary['Name'] = 'Jony';
     $keyDictionary['Name'] = 'King';
     $keyDictionary['Name'] = 'Arlon';
     $keyDictionary['Age'] = 30;
     $keyDictionary['Age'] = 50;
     $keyDictionary['Gender'] = 'Man';
+
+    // Key一覧表示
     $keys = array_keys($keyDictionary);
     $keysStr = '<table border="1">';
-    foreach($keys as $key){
+    $keysStr = $keysStr . '<tr><td>KEY</td></tr>';
+    foreach($keys as $key)
         $keysStr = $keysStr . '<tr><td>' . $key . '</td></tr>';
-    }
     $keysStr = $keysStr . '</table><br><br>';
 
     // value一覧表示
     $values = array_values($keyDictionary);
     $valueStr = '<table border="1">';
-    foreach($values as $value){
+    foreach($values as $key => $value)
         $valueStr = $valueStr . '<tr><td>' . $value . '</td></tr>';
-    }
     $valueStr = $valueStr . '</table><br><br>';
 
     // 画面生成

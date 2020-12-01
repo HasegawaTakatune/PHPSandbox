@@ -1,5 +1,5 @@
+<!-- http://localhost/PHPSandbox/sandbox2.php -->
 <?php
-
     $HTMLHead = '<!DOCTYPE html>
     <html lang="ja">
     <head>
@@ -11,7 +11,7 @@
 
     $show = '<br>Hello world<br>';
 
-    // 2次元配列の表示
+    // 2次元配列の表示    
     $data = array(
       array('base' => 'A拠点', 'category' => 'やすい屋', 'name' => '安価PC1', 'price' => 1000),
       array('base' => 'A拠点', 'category' => 'やすい屋', 'name' => '安価PC2', 'price' => 1200),
@@ -35,28 +35,35 @@
       array('base' => 'C拠点', 'category' => 'やばい屋', 'name' => '安価PC3', 'price' => 70000),
     );
 
+    // baseを取得して表示
     $baseA = array_values($data);
     $show = $show . '<table border="1">';
-    foreach($baseA as $value){
-        $show = $show . '<tr><td>' . $value['base'] . '</td></tr>';
-    }
+    $show = $show . '<tr><td>BASE</td></tr>';
+    foreach($baseA as $value)
+      $show = $show . '<tr><td>' . $value['base'] . '</td></tr>';
     $show = $show . '</table><br><br>';
 
+    // データ一覧表示
     $show = $show . '<table border="1">';
+    $show = $show . '<tr><td>BASE</td><td>CATEGORY</td><td>NAME</td><td>PRICE</td></tr>';
     for($i = 0;$i < count($data);$i++){
       if(!isset($data[$i]))continue;
-      $show = $show . '<tr><td>・' . $data[$i]['base'] . '━</td><td>' . $data[$i]['category'] . '━</td><td>' . $data[$i]['name'] . '━</td><td>' . $data[$i]['price'] . '\\</td></tr>';
+      $show = $show . '<tr><td>' . $data[$i]['base'] . '</td><td>' . $data[$i]['category'] . '</td><td>' . $data[$i]['name'] . '</td><td>' . $data[$i]['price'] . '\\</td></tr>';
     }
     $show = $show . '</table><br><br>';
 
+    // 多次元連想配列
     $roster = array(
       'Jony' => array('AGE' => 10,'GENDER' => 'MAN'),
       'Kein' => array('AGE' => 12,'GENDER' => 'MAN'),
       'Maria' => array('AGE' => 15,'GENDER' => 'WOMAN'),
     );
+
+    // 多次元連想配列の一覧表示
     $show = $show . '<table border="1">';
+    $show = $show . '<tr><td>NAME</td><td>AGE</td><td>GENDER</td><tr>';
     foreach($roster as $key => $value){
-      $show = $show . '<tr><td> ※NAME:' . $key . '</td><td>━AGE:' . $value['AGE'] . '</td><td>━GENDER:' . $value['GENDER'] . '</td><tr>';
+      $show = $show . '<tr><td>' . $key . '</td><td>' . $value['AGE'] . '</td><td>' . $value['GENDER'] . '</td><tr>';
     }
     $show = $show . '</table><br><br>';
 
