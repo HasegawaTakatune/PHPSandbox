@@ -22,7 +22,7 @@
     $HelloStr = $HelloStr . '</table><br><br>';
 
     // 2次元配列の表示
-    $data = array(        
+    $data = array(
         array('base' => 'A拠点', 'category' => 'やすい屋', 'name' => '安価PC1', 'price' => '1000円'),
         array('base' => 'A拠点', 'category' => 'やすい屋', 'name' => '安価PC2', 'price' => '1200円'),
         array('base' => 'A拠点', 'category' => 'やすい屋', 'name' => '安価PC3', 'price' => '1300円'),
@@ -43,14 +43,14 @@
         array('base' => 'C拠点', 'category' => 'やばい屋', 'name' => '安価PC1', 'price' => '50000円'),
         array('base' => 'C拠点', 'category' => 'やばい屋', 'name' => '安価PC2', 'price' => '60000円'),
         array('base' => 'C拠点', 'category' => 'やばい屋', 'name' => '安価PC3', 'price' => '70000円'),
-        );
+    );
 
     // データ一覧表示
     $details = '<table border="1">';
-    $details = $details . '<tr><td>KEY</td><td>CATEGORY</td><td>NAME</td><td>PRICE</td></tr>';
+    $details = $details . '<tr><td>KEY</td><td>BASE</td><td>CATEGORY</td><td>NAME</td><td>PRICE</td></tr>';
     foreach($data as $key => $value){
         if(!isset($value['category']) || !isset($value['name']) || !isset($value['price'])) continue;
-        $details = $details . '<tr><td>' . $key . '</td><td>' . $value['category'] . '</td><td>' . $value['name'] . '</td><td>' . $value['price'] . '</td></tr>';
+        $details = $details . '<tr><td>' . $key . '</td><td>' . $value['base'] . '</td><td>' . $value['category'] . '</td><td>' . $value['name'] . '</td><td>' . $value['price'] . '</td></tr>';
     }
     $details = $details . '</table><br><br>';
     
