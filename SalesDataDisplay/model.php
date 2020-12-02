@@ -6,7 +6,7 @@ define('PASSWORD','secret');
 
 class Model{
 
-    public static $connection = null;
+    private static $connection = null;
 
     public static function StartConnect(){
 

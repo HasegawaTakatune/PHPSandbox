@@ -7,7 +7,7 @@
     <body>
         <?php
         
-        require 'model.php';
+        require 'Model.php';
     
         $dns = 'mysql:dbname=sales_system;host=localhost';
         $user = 'root';
