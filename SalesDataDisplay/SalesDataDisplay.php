@@ -17,25 +17,7 @@
         $data = Model::getCustomer();
 
         while($row = $data->fetch(PDO::FETCH_ASSOC))
-        echo $row['last_name'] . '※※※';
-
-        // try{
-        //     $dbh = new PDO($dns,$user,$password);
-
-        //     $query = 'SELECT * FROM CUSTOMER_INFO';
-        //     $stmt = $dbh->query($query);
-
-
-
-        //     while($row = $stmt->fetch(PDO::FETCH_ASSOC))
-        //         echo $row['last_name'] . '※※※';
-        
-        // }catch(PDOException $e){
-        //     print('データベースの接続に失敗しました。' . $e->getMessage());
-        //     die();
-        // }
-
-        // $dbh = null;
+        echo $row['last_name'] . '※※※';        
         ?>
     </body>
 </html>

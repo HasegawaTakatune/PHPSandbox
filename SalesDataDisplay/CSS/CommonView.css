@@ -47,14 +47,6 @@ h1{
     color: #333;
   }
 
-  /* #side-menu {
-    background-color: lightblue;
-  }
-  #content {
-    background-color: lightgreen;
-  } */
-
-  /* @media (min-width: 600px) { */
     #parent {
       display: flex;
     }
