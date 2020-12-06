@@ -2,7 +2,7 @@ body{
     background-color: #404040;
 }
 
-h1{
+h1 {
     text-align: center;
     padding: 0.5em 1em;
     margin: 0.5em 0;
@@ -12,25 +12,74 @@ h1{
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32);
 }
 
-.show-display-frame{
-  border: 1px solid;
-  background-color: #d3d3d3;
-  margin-top: 10px;
-  height: 500px;
-  width: 1000px;
-  overflow-x: scroll;
+h2 {
+  text-align: center;
+  color: #bcbcbc;
+  padding: 0.5em 0;
+  border-top: solid 3px #bcbcbc;
+  border-bottom: solid 3px #bcbcbc;
 }
 
-.show-display-content > th{
-  font-size: var(--content-font-size,12px);
-  color:white;
-  background:#6495ED;
+h3 {
+  text-align: center;
+  color: #bcbcbc;
+}
+
+th.scroll {
+  font-size: 14px;
+  text-align: center;
+  color: #eeeeee;
+  background:#0e0e0e;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+}
+
+td.scroll {
+  font-size: 14px;
+  text-align: center;
+  color: #0e0e0e;
+  background:#eeeeee; 
+  padding: 0.1em 0.5em 0.1em 0.5em;
+}
+
+.scrollBox {
+  width: 70%; 
+  height: 100px; 
+  overflow-y: scroll; 
+  background:#eeeeee; 
+  margin-left:auto; 
+  margin-right:auto;
+}
+
+.scrollBox02 {
+  width: 95%; 
+  height: 300px; 
+  overflow-y: scroll; 
+  overflow-x: scroll; 
+  background:#1b1b1b; 
+  /* margin-left:auto; 
+  margin-right:auto; */
+  padding: 0.5em;
+}
+
+.label01 {
+  background-color: #0e0e0e;
+  width: 100px;
+  font-size: 14px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  padding-left: 1em;
+}
+
+.terms {
+  margin-bottom: 0.5em;
 }
 
 .btn01 {
+    background-color: #404040;
     display:block;  
     /* max-width: 180px; */
-    width: 180px;
+    width: 200px;
     border: 2px solid #fff;
     font-size: 16px;
     color: #fff;
@@ -41,7 +90,26 @@ h1{
     border-radius: 4px;
     transition: .4s;    
   }
+  
   .btn01:hover {
+    background-color: #fff;
+    border-color: #fff;
+    color: #333;
+  }
+
+  .btn02 {
+    background-color: #0e0e0e;
+    border: 2px solid #fff;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: center;
+    border-radius: 4px;
+    transition: .4s;    
+  }
+  
+  .btn02:hover {
     background-color: #fff;
     border-color: #fff;
     color: #333;

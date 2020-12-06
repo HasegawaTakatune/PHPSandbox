@@ -1,13 +1,19 @@
 <!-- http://localhost/PHPSandbox/SalesDataDisplay/View/Home.php -->
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Count up</title>
-</head>
-<body>
-    
-</body>
-</html>
+<?php 
+require_once '../Model.php';
+
+Model::StartConnect();
+$data = Model::getNotice();
+?>
+<div id="content">
+  <h2>ホーム画面</h2>
+  </br>
+  <h3>お知らせ</h3>
+  <div class="scrollBox">
+    <ul>
+      <?php while($row = $data->fetch(PDO::FETCH_ASSOC)){ ?>
+      <li><?=$row["notification_date"]?>&nbsp;&nbsp;<?=$row["info"];?>&nbsp;&nbsp;<a href="<?=$row["reference"]?>"><?=$row["reference_name"]?></a></li>
+      <?php } ?>
+    </ul>
+  </div>
+</div>

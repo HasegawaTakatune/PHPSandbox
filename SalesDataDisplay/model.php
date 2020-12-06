@@ -1,13 +1,12 @@
 <?php
-
-define('DNS','mysql:dbname=sales_system;host=localhost');
-define('USER','root');
-define('PASSWORD','secret');
+require_once 'config.php';
 
 class Model{
 
+    // 接続インスタンス
     private static $connection = null;
 
+    // 接続開始
     public static function StartConnect(){
 
         if(!is_null(self::$connection))return true;
@@ -28,6 +27,11 @@ class Model{
         return $result;
     }
 
+    // 接続終了
+    public static function CloseConnect(){
+        self::$connection = null;
+    }
+
     // public static function getCustomer(){
     //     $data = null;
     //     try{
@@ -40,6 +44,7 @@ class Model{
     //     return $data;
     // }
 
+    // 顧客情報取得
     public static function getCustomer($customer_id = "", $name = "", $age = "", $gender_code = ""){
         $data = null;
         $query = "";
@@ -49,20 +54,20 @@ class Model{
 
             $query .= " SELECT * FROM CUSTOMER_INFO ";
 
-            if(!is_null($customer_id) && $customer_id != "")
+            if($customer_id != "")
                 $judg .= " customer_id LIKE '%${customer_id}%' ";
 
-            if(!is_null($name) && $name != ""){
+            if($name != ""){
                 if($judg != "")$judg .= " AND ";
-                $judg .= " last_name LIKE '%${name}%' AND first_name LIKE '%${name}%' ";
+                $judg .= " last_name LIKE '%${name}%' OR first_name LIKE '%${name}%' ";
             }
 
-            if(!is_null($age) && $age != ""){
+            if($age != ""){
                 if($judg != "")$judg .= " AND ";
                 $judg .= " age = ${age} ";
             }
 
-            if(!is_null($gender_code) && $gender_code != ""){
+            if($gender_code != ""){
                 if($judg != "")$judg .= " AND ";
                 $judg .= " gender_code = ${gender_code} ";
             }
@@ -70,6 +75,51 @@ class Model{
             if($judg != "")$query .= "WHERE ${judg}";
 
             $data = self::$connection->query($query);
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $data;
+    }
+
+    // 支店情報取得
+    public static function getBranch($branch_id = "", $branch_name = "", $match_type = PART){
+        $data = null;
+        $query = "";
+        $judg = "";
+        try{
+            if(is_null(self::$connection))return;
+
+            $query .= " SELECT * FROM BRANCH_MASTER ";
+
+            if($branch_id != "")
+                $judg .= " branch_id = '${branch_id}' ";
+
+            if($branch_name != ""){
+                if($judg != "")$judg .= " AND ";
+
+                switch($match_type){
+                    case PART: $judg .= " name LIKE '%${branch_name}%' OR abbreviation LIKE '%${branch_name}%' "; break;
+                    case PERFECT: $judg .= " name = '${branch_name}' OR abbreviation = '${branch_name}' "; break;
+                    default: $judg .= " 1 = 1 "; break;
+                }
+            }           
+
+            if($judg != "")$query .= "WHERE ${judg}";
+
+            $data = self::$connection->query($query);
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $data;
+    }
+
+    // 通知情報取得
+    public static function getNotice(){
+        $data = null;
+        try{
+            if(is_null(self::$connection))return;
+
+            $data = self::$connection->query('SELECT * FROM NOTICE_MASTER');
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
