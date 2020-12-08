@@ -32,20 +32,8 @@ class Model{
         self::$connection = null;
     }
 
-    // public static function getCustomer(){
-    //     $data = null;
-    //     try{
-    //         if(is_null(self::$connection))return;
-
-    //         $data = self::$connection->query('SELECT * FROM CUSTOMER_INFO');
-    //     }catch(Exception $e){
-    //         error_log($e->getMessage(), 1);
-    //     }
-    //     return $data;
-    // }
-
     // 顧客情報取得
-    public static function getCustomer($customer_id = "", $name = "", $age = "", $gender_code = ""){
+    public static function getCustomer($id = "", $name = "", $age = "", $gender_code = ""){
         $data = null;
         $query = "";
         $judg = "";
@@ -54,8 +42,8 @@ class Model{
 
             $query .= " SELECT * FROM CUSTOMER_INFO ";
 
-            if($customer_id != "")
-                $judg .= " customer_id LIKE '%${customer_id}%' ";
+            if($id != "")
+                $judg .= " customer_id LIKE '%${id}%' ";
 
             if($name != ""){
                 if($judg != "")$judg .= " AND ";
@@ -82,7 +70,7 @@ class Model{
     }
 
     // 支店情報取得
-    public static function getBranch($branch_id = "", $branch_name = "", $match_type = PART){
+    public static function getBranch($id = "", $name = "", $match_type = PART){
         $data = null;
         $query = "";
         $judg = "";
@@ -91,15 +79,15 @@ class Model{
 
             $query .= " SELECT * FROM BRANCH_MASTER ";
 
-            if($branch_id != "")
-                $judg .= " branch_id = '${branch_id}' ";
+            if($id != "")
+                $judg .= " branch_id = '${id}' ";
 
-            if($branch_name != ""){
+            if($name != ""){
                 if($judg != "")$judg .= " AND ";
 
                 switch($match_type){
-                    case PART: $judg .= " name LIKE '%${branch_name}%' OR abbreviation LIKE '%${branch_name}%' "; break;
-                    case PERFECT: $judg .= " name = '${branch_name}' OR abbreviation = '${branch_name}' "; break;
+                    case PART: $judg .= " name LIKE '%${name}%' OR abbreviation LIKE '%${name}%' "; break;
+                    case PERFECT: $judg .= " name = '${name}' OR abbreviation = '${name}' "; break;
                     default: $judg .= " 1 = 1 "; break;
                 }
             }           
@@ -111,6 +99,20 @@ class Model{
             error_log($e->getMessage(), 1);
         }
         return $data;
+    }
+
+    // 支店情報取得
+    public static function updBranch($id, $name, $abbreviation){
+        $result = -1;
+        $query = "";
+        try{
+            if(is_null(self::$connection))return;
+            $query .= " UPDATE BRANCH_MASTER SET name = ${name}, abbreviation = ${abbreviation} WHERE branch_id = ${id}";
+            $result = self::$connection->exec($query);
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
     }
 
     // 通知情報取得

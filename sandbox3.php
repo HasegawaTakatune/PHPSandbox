@@ -173,5 +173,23 @@
   </script>
   <div id="datetime"></div>
 
+  <?php
+  $number = 0;
+
+  function EchoA(){
+    echo '<p>A</p></br>';
+  }
+
+  function AddNum(){
+    global $number;
+    $number++;
+  }
+  ?>
+  <form>
+    <input type="button" value="表示A" onclick="EchoA()">
+    <input type="button" value="値加算" onclick="AddNum()">
+  </form>
+  <?=$number?>
+
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/BranchInfo.php -->
+<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <?php 
 require_once '../config.php';
 require_once '../Model.php';
@@ -11,22 +11,21 @@ $match_type = (isset($_POST['match_type'])) ? $_POST['match_type'] : -1;
 
 Model::StartConnect();
 $data = Model::getBranch($branch_id,$branch_name,$match_type);
-
 ?>
 <div id="content">
     <h2>支店一覧画面</h2>
-    <h3>条件</h3>
+    <h3>条件</h3>   
     <form action="" method="POST">
-        <input type="hidden" name="screenType" value="<?=BRANCH?>">
+        <input type="hidden" name="screen_type" value="<?=BRANCH?>">
         <table>
         <tr>
-            <td><div class="label01">支店ID</div></td><td><input type="text" name="branch_id" value="<?=$branch_id?>" class="terms"></td>
+            <td><div class="label01">支店ID</div></td><td><input type="text" name="branch_id" value="<?=$branch_id?>" class="inputItem01"></td>
         </tr>
         <tr>
-            <td><div class="label01">支店名</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="terms"></td>
+            <td><div class="label01">支店名</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01"></td>
         </tr>
         <tr>
-            <td><div class="label01">一致タイプ</div></td><td><input type="radio" name="match_type" value=<?=PART?> checked class="terms">部分一致</td><td><input type="radio" name="match_type" value=<?=PERFECT?> class="terms">完全一致</td>
+            <td><div class="label01">一致タイプ</div></td><td><input type="radio" name="match_type" value=<?=PART?> checked class="inputItem01">部分一致</td><td><input type="radio" name="match_type" value=<?=PERFECT?> class="terms">完全一致</td>
         </tr>
         </table>
         <input type="submit" value="検索" class="btn02">
@@ -34,21 +33,21 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
     <div class="scrollBox02">
         <table>
             <tr>
-            <th class="scroll" style="width: 50px;">支店ID</th>
-            <th class="scroll" style="width: 600px;">支店名</th>
-            <th class="scroll" style="width: 350px;">略称</th>
-            <th class="scroll" style="width: 50px;">詳細</th>
+            <th class="label01">支店ID</th>
+            <th class="label01">支店名</th>
+            <th class="label01">略称</th>
+            <th class="label01">詳細</th>
             </tr>
             <?php while($row = $data->fetch(PDO::FETCH_ASSOC)){ ?>
               <tr>
-              <td class="scroll"><?=$row["branch_id"]?></td>
-              <td class="scroll"><?=$row["name"]?></td>
-              <td class="scroll"><?=$row["abbreviation"]?></td>
-              <td class="scroll">
-                  <form>
-                      <input type="submit" value="詳細">
-                      <input type="hidden" name="screenType" value="<?=HOME?>">
+              <td class="label01"><?=$row["branch_id"]?></td>
+              <td class="label01"><?=$row["name"]?></td>
+              <td class="label01"><?=$row["abbreviation"]?></td>
+              <td class="label01">
+                  <form action="" method="POST">
+                      <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">
                       <input type="hidden" name="branch_id" value="<?=$row["branch_id"]?>">
+                      <input type="submit" value="詳細" class="labelBtn01">
                     </form>
                 </td>
               </tr>

@@ -18,17 +18,14 @@ TODO:などの処理を行う。
 <body>
 <h1>注文管理システム</h1>
 <div id="parent">
-  <?php include 'SideMenu.php' ?>
-
   <?php 
-  $type = (isset($_POST['screenType'])) ? $_POST['screenType'] : HOME;
-  // echo $type . '</br>';
-  // global $login_user;
-  // echo ($login_user != '')? $Parameta->login_user : 'Not setting';
-  //  $Parameta->login_user = $type;
+  include 'SideMenu.php';
+
+  $type = (isset($_POST['screen_type'])) ? $_POST['screen_type'] : -1;
   switch($type){
     case HOME: include 'Home.php'; break;
     case BRANCH: include 'BranchInfo.php'; break;
+    case BRANCH_DETAILS: include 'BranchDetails.php'; break;
     case ORDER: include ''; break;
     case CUSTOMER: include ''; break;
     case PRODUCT: include ''; break;
@@ -36,21 +33,15 @@ TODO:などの処理を行う。
     default: include 'NotScreen.php'; break;
   }
   ?>
-
- <?php 
- /*<div id="content">
- <h2>ホーム画面</h2>
- </br>
- <h3>お知らせ</h3>
- <div class="scrollBox">
-   <ul>
-     <?php foreach($info_list as $key => $value){ ?>
-     <li><?=$value["date"]?>&nbsp;&nbsp;<?=$value["info"];?>&nbsp;&nbsp;<a href="<?=$value["reference"]?>"><?=$value["reference_name"]?></a></li>
-     <?php } ?>
-   </ul>
- </div>
-</div> */
- ?>
 </div>
+
+<?php
+if(IS_DEBUG){
+  $branch_id = (isset($_POST['branch_id'])) ? $_POST['branch_id'] : -1;
+  echo "
+  <h2>SCREEN : ${type}</h2>
+  <h2>BRANCH ID : ${branch_id}</h2>";
+}
+?>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/Home.php -->
+<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <?php 
 require_once '../Model.php';
 

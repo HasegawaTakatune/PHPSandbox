@@ -25,7 +25,7 @@ h3 {
   color: #bcbcbc;
 }
 
-th.scroll {
+th.label01 {
   font-size: 14px;
   text-align: center;
   color: #eeeeee;
@@ -33,11 +33,27 @@ th.scroll {
   padding: 0.1em 0.5em 0.1em 0.5em;
 }
 
-td.scroll {
+td.label01 {
   font-size: 14px;
   text-align: center;
   color: #0e0e0e;
   background:#eeeeee; 
+  padding: 0.1em 0.5em 0.1em 0.5em;
+}
+
+td.label02 {
+  font-size: 14px;
+  text-align: left;
+  color: #0e0e0e;
+  background:#404040; 
+  padding: 0.1em 0.5em 0.1em 0.5em;
+}
+
+.inputItem01 {
+  color: #eeeeee;
+  background:#0e0e0e;
+  border: 1px solid #fff;
+  font-size: 14px;
   padding: 0.1em 0.5em 0.1em 0.5em;
 }
 
@@ -51,34 +67,28 @@ td.scroll {
 }
 
 .scrollBox02 {
-  width: 95%; 
+  width: auto; 
   height: 300px; 
   overflow-y: scroll; 
   overflow-x: scroll; 
-  background:#1b1b1b; 
-  /* margin-left:auto; 
-  margin-right:auto; */
-  padding: 0.5em;
+  background:#1b1b1b;
+  padding: 0.3em;
 }
 
 .label01 {
   background-color: #0e0e0e;
-  width: 100px;
+  /* width: 100px; */
   font-size: 14px;
   color: #fff;
   font-weight: bold;
-  margin-bottom: 0.5em;
+  /* margin-bottom: 0.5em; */
   padding-left: 1em;
-}
-
-.terms {
-  margin-bottom: 0.5em;
+  padding-right: 0.5em;
 }
 
 .btn01 {
     background-color: #404040;
-    display:block;  
-    /* max-width: 180px; */
+    display:block;
     width: 200px;
     border: 2px solid #fff;
     font-size: 16px;
@@ -103,6 +113,7 @@ td.scroll {
     font-size: 16px;
     color: #fff;
     font-weight: bold;
+    margin-top: 0.5em;
     margin-bottom: 0.5em;
     text-align: center;
     border-radius: 4px;
@@ -110,6 +121,24 @@ td.scroll {
   }
   
   .btn02:hover {
+    background-color: #fff;
+    border-color: #fff;
+    color: #333;
+  }
+
+  .labelBtn01 {
+    background-color: #0e0e0e;
+    border: 2px solid #fff;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 0.1em;
+    text-align: center;
+    border-radius: 4px;
+    transition: .4s;    
+  }
+  
+  .labelBtn01:hover {
     background-color: #fff;
     border-color: #fff;
     color: #333;
@@ -124,4 +153,3 @@ td.scroll {
     #content {
       flex-grow: 1;
     }
-  /* } */

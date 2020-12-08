@@ -1,3 +1,4 @@
+<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <div id="content">
     <h2>エラー</h2>
     </br>

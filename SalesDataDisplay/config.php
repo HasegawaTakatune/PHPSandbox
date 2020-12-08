@@ -17,4 +17,7 @@ define('BRANCH_DETAILS',7);
 // パターンマッチタイプ
 define('PART',0);
 define('PERFECT',1);
+
+// デバッグ
+define('IS_DEBUG',true);
 ?>
