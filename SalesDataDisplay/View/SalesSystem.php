@@ -5,7 +5,11 @@ TODO:ログインボタンが押された後にセッション変数でログイ
 TODO:その、セッション変数をもとに空白であればログイン画面にリダイレクトする
 TODO:などの処理を行う。
  -->
-<?php require_once '../config.php'; ?>
+<?php 
+require_once '../config.php'; 
+require_once '../Model.php';
+Model::StartConnect();
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>

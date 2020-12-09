@@ -3,13 +3,10 @@
 require_once '../config.php';
 require_once '../Model.php';
 
-Model::StartConnect();
-
 $branch_id = (isset($_POST['branch_id'])) ? $_POST['branch_id'] : "";
 $branch_name = (isset($_POST['branch_name'])) ? $_POST['branch_name'] : "";
 $match_type = (isset($_POST['match_type'])) ? $_POST['match_type'] : -1;
 
-Model::StartConnect();
 $data = Model::getBranch($branch_id,$branch_name,$match_type);
 ?>
 <div id="content">
@@ -19,10 +16,10 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
         <input type="hidden" name="screen_type" value="<?=BRANCH?>">
         <table>
         <tr>
-            <td><div class="label01">支店ID</div></td><td><input type="text" name="branch_id" value="<?=$branch_id?>" class="inputItem01"></td>
+            <td><div class="label01">支店ID</div></td><td><input type="text" name="branch_id" value="<?=$branch_id?>" class="inputItem01" maxlength="6"></td>
         </tr>
         <tr>
-            <td><div class="label01">支店名</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01"></td>
+            <td><div class="label01">支店名</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01" maxlength="40"></td>
         </tr>
         <tr>
             <td><div class="label01">一致タイプ</div></td><td><input type="radio" name="match_type" value=<?=PART?> checked class="inputItem01">部分一致</td><td><input type="radio" name="match_type" value=<?=PERFECT?> class="terms">完全一致</td>

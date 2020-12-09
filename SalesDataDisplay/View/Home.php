@@ -2,7 +2,6 @@
 <?php 
 require_once '../Model.php';
 
-Model::StartConnect();
 $data = Model::getNotice();
 ?>
 <div id="content">

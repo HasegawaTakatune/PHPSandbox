@@ -13,13 +13,14 @@ class Model{
 
         $result = true;
         try{
+            // DB接続のインスタンス取得
             self::$connection = new PDO(DNS,USER,PASSWORD,[
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_BOTH,
                 PDO::ATTR_EMULATE_PREPARES => true,
                 PDO::ATTR_PERSISTENT => true
             ]);
-        }catch(PDOException $e){            
+        }catch(PDOException $e){
             error_log($e->getMessage(), 1);
             $result = false;
         }
@@ -34,16 +35,18 @@ class Model{
 
     // 顧客情報取得
     public static function getCustomer($id = "", $name = "", $age = "", $gender_code = ""){
+        
+        if(is_null(self::$connection))return null;
+
         $data = null;
         $query = "";
         $judg = "";
-        try{
-            if(is_null(self::$connection))return;
 
+        try{
             $query .= " SELECT * FROM CUSTOMER_INFO ";
 
             if($id != "")
-                $judg .= " customer_id LIKE '%${id}%' ";
+                $judg .= " customer_id = '${id}' ";
 
             if($name != ""){
                 if($judg != "")$judg .= " AND ";
@@ -71,12 +74,14 @@ class Model{
 
     // 支店情報取得
     public static function getBranch($id = "", $name = "", $match_type = PART){
+        
+        if(is_null(self::$connection))return null;
+
         $data = null;
         $query = "";
         $judg = "";
-        try{
-            if(is_null(self::$connection))return;
 
+        try{
             $query .= " SELECT * FROM BRANCH_MASTER ";
 
             if($id != "")
@@ -103,10 +108,13 @@ class Model{
 
     // 支店情報取得
     public static function updBranch($id, $name, $abbreviation){
+
+        if(is_null(self::$connection))return -1;
+
         $result = -1;
         $query = "";
+
         try{
-            if(is_null(self::$connection))return;
             $query .= " UPDATE BRANCH_MASTER SET name = ${name}, abbreviation = ${abbreviation} WHERE branch_id = ${id}";
             $result = self::$connection->exec($query);
         }catch(Exception $e){
@@ -117,11 +125,13 @@ class Model{
 
     // 通知情報取得
     public static function getNotice(){
-        $data = null;
-        try{
-            if(is_null(self::$connection))return;
 
-            $data = self::$connection->query('SELECT * FROM NOTICE_MASTER');
+        if(is_null(self::$connection))return null;
+
+        $data = null;
+
+        try{
+            $data = self::$connection->query(' SELECT * FROM NOTICE_MASTER');
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
