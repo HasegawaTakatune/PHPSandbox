@@ -30,6 +30,7 @@ Model::StartConnect();
     case HOME: include 'Home.php'; break;
     case BRANCH: include 'BranchInfo.php'; break;
     case BRANCH_DETAILS: include 'BranchDetails.php'; break;
+    case BRANCH_INSERT: include 'BranchInsert.php'; break;
     case ORDER: include ''; break;
     case CUSTOMER: include ''; break;
     case PRODUCT: include ''; break;
@@ -41,10 +42,7 @@ Model::StartConnect();
 
 <?php
 if(IS_DEBUG){
-  $branch_id = (isset($_POST['branch_id'])) ? $_POST['branch_id'] : -1;
-  echo "
-  <h2>SCREEN : ${type}</h2>
-  <h2>BRANCH ID : ${branch_id}</h2>";
+  echo "<h2>SCREEN : ${type}</h2>";
 }
 ?>
 </body>

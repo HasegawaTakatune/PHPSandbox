@@ -2,7 +2,7 @@
 // DB情報
 define('DNS','mysql:dbname=sales_system;host=localhost');
 define('USER','root');
-define('PASSWORD','secret');
+define('PASSWORD',''); //define('PASSWORD','secret');
 
 // 画面名
 define('HOME',1);
@@ -13,6 +13,7 @@ define('PRODUCT',5);
 define('REPORT',6);
 
 define('BRANCH_DETAILS',7);
+define('BRANCH_INSERT',8);
 
 // パターンマッチタイプ
 define('PART',0);

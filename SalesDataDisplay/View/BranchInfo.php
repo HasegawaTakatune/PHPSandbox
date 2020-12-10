@@ -11,7 +11,8 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
 ?>
 <div id="content">
     <h2>支店一覧画面</h2>
-    <h3>条件</h3>   
+    <h3>条件</h3>
+    <form action="" method="$_POST"><input type="submit" value="新規作成" class="btn02"></form>
     <form action="" method="POST">
         <input type="hidden" name="screen_type" value="<?=BRANCH?>">
         <table>
@@ -37,13 +38,13 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
             </tr>
             <?php while($row = $data->fetch(PDO::FETCH_ASSOC)){ ?>
               <tr>
-              <td class="label01"><?=$row["branch_id"]?></td>
-              <td class="label01"><?=$row["name"]?></td>
-              <td class="label01"><?=$row["abbreviation"]?></td>
+              <td class="label01"><?=$row["id"]?></td>
+              <td class="label01" style="width: 300px;"><?=$row["name"]?></td>
+              <td class="label01" style="width: 100px;"><?=$row["abbreviation"]?></td>
               <td class="label01">
                   <form action="" method="POST">
                       <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">
-                      <input type="hidden" name="branch_id" value="<?=$row["branch_id"]?>">
+                      <input type="hidden" name="branch_id" value="<?=$row["id"]?>">
                       <input type="submit" value="詳細" class="labelBtn01">
                     </form>
                 </td>

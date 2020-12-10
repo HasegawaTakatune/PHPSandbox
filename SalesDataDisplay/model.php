@@ -45,21 +45,21 @@ class Model{
         try{
             $query .= " SELECT * FROM CUSTOMER_INFO ";
 
-            if($id != "")
-                $judg .= " customer_id = '${id}' ";
+            if($id !== "")
+                $judg .= " id = '${id}' ";
 
-            if($name != ""){
-                if($judg != "")$judg .= " AND ";
+            if($name !== ""){
+                if($judg !== "")$judg .= " AND ";
                 $judg .= " last_name LIKE '%${name}%' OR first_name LIKE '%${name}%' ";
             }
 
-            if($age != ""){
-                if($judg != "")$judg .= " AND ";
+            if($age !== ""){
+                if($judg !== "")$judg .= " AND ";
                 $judg .= " age = ${age} ";
             }
 
-            if($gender_code != ""){
-                if($judg != "")$judg .= " AND ";
+            if($gender_code !== ""){
+                if($judg !== "")$judg .= " AND ";
                 $judg .= " gender_code = ${gender_code} ";
             }
 
@@ -84,11 +84,11 @@ class Model{
         try{
             $query .= " SELECT * FROM BRANCH_MASTER ";
 
-            if($id != "")
-                $judg .= " branch_id = '${id}' ";
+            if($id !== "")
+                $judg .= " id = '${id}' ";
 
-            if($name != ""){
-                if($judg != "")$judg .= " AND ";
+            if($name !== ""){
+                if($judg !== "")$judg .= " AND ";
 
                 switch($match_type){
                     case PART: $judg .= " name LIKE '%${name}%' OR abbreviation LIKE '%${name}%' "; break;
@@ -97,7 +97,7 @@ class Model{
                 }
             }           
 
-            if($judg != "")$query .= "WHERE ${judg}";
+            if($judg !== "")$query .= "WHERE ${judg}";
 
             $data = self::$connection->query($query);
         }catch(Exception $e){
@@ -106,21 +106,45 @@ class Model{
         return $data;
     }
 
-    // 支店情報取得
+    // 支店情報更新
     public static function updBranch($id, $name, $abbreviation){
 
         if(is_null(self::$connection))return -1;
 
-        $result = -1;
-        $query = "";
+        $result = false;
 
         try{
-            $query .= " UPDATE BRANCH_MASTER SET name = ${name}, abbreviation = ${abbreviation} WHERE branch_id = ${id}";
-            $result = self::$connection->exec($query);
+            $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET name = :name, abbreviation = :abbreviation WHERE id = :id');
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
         return $result;
+    }
+
+    // 支店情報新規登録
+    public static function instBranch($name, $abbreviation){
+        
+        if(is_null(self::$connection))return -1;
+
+        $data = null;
+        $result = false;
+
+        try{
+            $stmt = self::$connection->prepare('INSERT INTO BRANCH_MASTER (name, abbreviation) VALUES(:name, :abbreviation)');
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
+            $result = $stmt->execute();
+
+            if($result)
+                $data = self::$connection->query('SELECT * FROM BRANCH_MASTER ORDER BY id DESC LIMIT 1');
+        }catch(Exception $e){
+            error_log($e->getMessage());
+        }
+        return $data;
     }
 
     // 通知情報取得
@@ -139,5 +163,3 @@ class Model{
     }
 
 }
-
-?>
