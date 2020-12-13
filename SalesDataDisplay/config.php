@@ -19,6 +19,11 @@ define('BRANCH_INSERT',8);
 define('PART',0);
 define('PERFECT',1);
 
+// 活性フラグ
+define('ACTIVE',0);
+define('DEACTIVE',1);
+define('ACTIVE_DEACTIVE',2);
+
 // デバッグ
 define('IS_DEBUG',true);
 ?>

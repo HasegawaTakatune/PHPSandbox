@@ -41,6 +41,14 @@ td.label01 {
   padding: 0.1em 0.5em 0.1em 0.5em;
 }
 
+td.label01-disabled {
+  font-size: 14px;
+  text-align: center;
+  color: #0e0e0e;
+  background:#7f7f7f;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+}
+
 td.label02 {
   font-size: 14px;
   text-align: left;
@@ -52,6 +60,14 @@ td.label02 {
 .inputItem01 {
   color: #eeeeee;
   background:#0e0e0e;
+  border: 1px solid #fff;
+  font-size: 14px;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+}
+
+.inputItem01-disabled {
+  color: #eeeeee;
+  background:#404040;
   border: 1px solid #fff;
   font-size: 14px;
   padding: 0.1em 0.5em 0.1em 0.5em;
@@ -126,6 +142,19 @@ td.label02 {
     color: #333;
   }
 
+  .btn02-disabled {
+    background-color: #404040;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    text-align: center;
+    transition: .4s;    
+  }
+
   .labelBtn01 {
     background-color: #0e0e0e;
     border: 2px solid #fff;
@@ -142,6 +171,24 @@ td.label02 {
     background-color: #fff;
     border-color: #fff;
     color: #333;
+  }
+
+  .labelBtn01-disabled {
+    background-color: #404040;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 0.1em;
+    text-align: center;
+    transition: .4s;    
+  }
+
+  .terms {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
   }
 
     #parent {

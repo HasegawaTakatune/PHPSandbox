@@ -34,7 +34,7 @@ class Model{
     }
 
     // 顧客情報取得
-    public static function getCustomer($id = "", $name = "", $age = "", $gender_code = ""){
+    public static function getCustomer($id = "", $name = "", $age = "", $gender_code = "", $active = ACTIVE_DEACTIVE){
         
         if(is_null(self::$connection))return null;
 
@@ -62,6 +62,13 @@ class Model{
                 if($judg !== "")$judg .= " AND ";
                 $judg .= " gender_code = ${gender_code} ";
             }
+            
+            switch($active){
+                case ACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = true "; break;
+                case DEACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = false "; break;
+                case ACTIVE_DEACTIVE: break;
+                default: break;
+            }
 
             if($judg != "")$query .= "WHERE ${judg}";
 
@@ -73,7 +80,7 @@ class Model{
     }
 
     // 支店情報取得
-    public static function getBranch($id = "", $name = "", $match_type = PART){
+    public static function getBranch($id = "", $name = "", $match_type = PART, $active = ACTIVE_DEACTIVE){
         
         if(is_null(self::$connection))return null;
 
@@ -95,7 +102,14 @@ class Model{
                     case PERFECT: $judg .= " name = '${name}' OR abbreviation = '${name}' "; break;
                     default: $judg .= " 1 = 1 "; break;
                 }
-            }           
+            }     
+            
+            switch($active){
+                case ACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = true "; break;
+                case DEACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = false "; break;
+                case ACTIVE_DEACTIVE: break;
+                default: break;
+            }
 
             if($judg !== "")$query .= "WHERE ${judg}";
 
@@ -125,6 +139,23 @@ class Model{
         return $result;
     }
 
+    // 支店情報削除
+    public static function dltBranch($id){
+        
+        if(is_null(self::$connection))return -1;
+
+        $result = false;
+
+        try{
+            $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET active = false WHERE id = :id');
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
+    }
+
     // 支店情報新規登録
     public static function instBranch($name, $abbreviation){
         
@@ -134,7 +165,7 @@ class Model{
         $result = false;
 
         try{
-            $stmt = self::$connection->prepare('INSERT INTO BRANCH_MASTER (name, abbreviation) VALUES(:name, :abbreviation)');
+            $stmt = self::$connection->prepare('INSERT INTO BRANCH_MASTER (name, abbreviation, active) VALUES(:name, :abbreviation, true)');
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
             $result = $stmt->execute();

@@ -11,8 +11,7 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
 ?>
 <div id="content">
     <h2>支店一覧画面</h2>
-    <h3>条件</h3>
-    <form action="" method="$_POST"><input type="submit" value="新規作成" class="btn02"></form>
+    <form action="" method="POST"><input type="submit" value="新規作成" class="btn02"><input type="hidden" name="screen_type" value="<?=BRANCH_INSERT?>"></form>
     <form action="" method="POST">
         <input type="hidden" name="screen_type" value="<?=BRANCH?>">
         <table>
@@ -23,7 +22,7 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
             <td><div class="label01">支店名</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01" maxlength="40"></td>
         </tr>
         <tr>
-            <td><div class="label01">一致タイプ</div></td><td><input type="radio" name="match_type" value=<?=PART?> checked class="inputItem01">部分一致</td><td><input type="radio" name="match_type" value=<?=PERFECT?> class="terms">完全一致</td>
+            <td><div class="label01">一致タイプ</div></td><td class="terms"><input type="radio" name="match_type" value=<?=PART?> checked>部分一致</td><td class="terms"><input type="radio" name="match_type" value=<?=PERFECT?>>完全一致</td>
         </tr>
         </table>
         <input type="submit" value="検索" class="btn02">
@@ -38,14 +37,14 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
             </tr>
             <?php while($row = $data->fetch(PDO::FETCH_ASSOC)){ ?>
               <tr>
-              <td class="label01"><?=$row["id"]?></td>
-              <td class="label01" style="width: 300px;"><?=$row["name"]?></td>
-              <td class="label01" style="width: 100px;"><?=$row["abbreviation"]?></td>
-              <td class="label01">
+              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?>><?=$row["id"]?></td>
+              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?> style="width: 300px;"><?=$row["name"]?></td>
+              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?> style="width: 100px;"><?=$row["abbreviation"]?></td>
+              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?>>
                   <form action="" method="POST">
                       <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">
                       <input type="hidden" name="branch_id" value="<?=$row["id"]?>">
-                      <input type="submit" value="詳細" class="labelBtn01">
+                      <input type="submit" value="詳細" <?php echo ($row["active"]) ? 'class="labelBtn01"' : 'class="labelBtn01-disabled" disabled'; ?>>
                     </form>
                 </td>
               </tr>
