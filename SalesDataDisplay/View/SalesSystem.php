@@ -31,7 +31,7 @@ Model::StartConnect();
     case BRANCH: include 'BranchInfo.php'; break;
     case BRANCH_DETAILS: include 'BranchDetails.php'; break;
     case BRANCH_INSERT: include 'BranchInsert.php'; break;
-    case ORDER: include ''; break;
+    case ORDER: include 'OrderInfo.php'; break;
     case CUSTOMER: include ''; break;
     case PRODUCT: include ''; break;
     case REPORT: include ''; break;

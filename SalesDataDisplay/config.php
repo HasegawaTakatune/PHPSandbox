@@ -24,6 +24,11 @@ define('ACTIVE',0);
 define('DEACTIVE',1);
 define('ACTIVE_DEACTIVE',2);
 
+// 共通
+define('GENDER','GENDER');
+define('CATEGORY','CATEGORY');
+define('ORDER_STATE','ORDER_STATE');
+
 // デバッグ
 define('IS_DEBUG',true);
 ?>

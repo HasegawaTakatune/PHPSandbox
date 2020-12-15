@@ -16,18 +16,32 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
         <input type="hidden" name="screen_type" value="<?=BRANCH?>">
         <table>
         <tr>
-            <td><div class="label01">支店ID</div></td><td><input type="text" name="branch_id" value="<?=$branch_id?>" class="inputItem01" maxlength="6"></td>
+            <td><div class="label01">注文ID</div></td><td><input type="text" name="branch_id" value="<?=$branch_id?>" class="inputItem01" maxlength="6"></td>
         </tr>
         <tr>
-            <td><div class="label01">支店名</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01" maxlength="40"></td>
+            <td><div class="label01">支店ID</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01" maxlength="6"></td>
         </tr>
         <tr>
-            <td><div class="label01">一致タイプ</div></td><td class="terms"><input type="radio" name="match_type" value=<?=PART?> checked>部分一致</td><td class="terms"><input type="radio" name="match_type" value=<?=PERFECT?>>完全一致</td>
+            <td><div class="label01">顧客ID</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01" maxlength="6"></td>
+        </tr>
+        <tr>
+            <td><div class="label01">輸送ID</div></td><td><input type="text" name="branch_name" value="<?=$branch_name?>" class="inputItem01" maxlength="6"></td>
+        </tr>
+        <tr>
+            <td><div class="label01">注文日付</div></td><td><input type="date" name="branch_name" value="<?=$branch_name?>" class="inputItem01">～<input type="date" name="branch_name" value="<?=$branch_name?>" class="inputItem01"></td>
+        </tr>
+        <tr>
+            <td><div class="label01">注文ステータス</div></td>
+            <td  class="terms">
+                <input type="checkbox" name="branch_name" value="0">商品確認中
+                <input type="checkbox" name="branch_name" value="1">配達中
+                <input type="checkbox" name="branch_name" value="2">配達済
+            </td>
         </tr>
         </table>
         <input type="submit" value="検索" class="btn02">
     </form>
-    <div class="scrollBox02">        
+    <div class="scrollBox02">
         <table>
             <tr>
             <th class="label01">支店ID</th>
