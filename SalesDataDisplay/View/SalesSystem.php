@@ -8,6 +8,7 @@ TODO:などの処理を行う。
 <?php 
 require_once '../config.php'; 
 require_once '../Model.php';
+require_once '../Debug.php';
 Model::StartConnect();
 ?>
 <!DOCTYPE html>
@@ -32,6 +33,7 @@ Model::StartConnect();
     case BRANCH_DETAILS: include 'BranchDetails.php'; break;
     case BRANCH_INSERT: include 'BranchInsert.php'; break;
     case ORDER: include 'OrderInfo.php'; break;
+    case ORDER_DETAILS: include 'OrderDetails.php'; break;
     case CUSTOMER: include ''; break;
     case PRODUCT: include ''; break;
     case REPORT: include ''; break;

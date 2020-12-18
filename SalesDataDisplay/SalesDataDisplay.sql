@@ -53,7 +53,7 @@ CREATE TABLE PRODUCT_INFO(
 
 /*共有マスタ*/
 CREATE TABLE COMMON_MASTER(
-    major_items CHAR(10) NOT NULL COMMENT '大項目',
+    major_items CHAR(20) NOT NULL COMMENT '大項目',
     sub_items INT(2) UNSIGNED ZEROFILL NOT NULL COMMENT '小項目',
     name VARCHAR(40) NOT NULL COMMENT '名前'
 ) COMMENT='共有マスタ';

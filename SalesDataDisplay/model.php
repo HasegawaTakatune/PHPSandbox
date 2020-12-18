@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once 'Debug.php';
 
 define('DATE_FROM',1);
 define('DATE_TO',2);
@@ -54,8 +55,6 @@ class Model{
             $query .= " SELECT * FROM CUSTOMER_INFO ";
 
             self::AddJudg($id,"id",$judg);
-            // if($id !== "")
-            //     $judg .= " id = '${id}' ";
 
             if($name !== ""){
                 if($judg !== "")$judg .= " AND ";
@@ -63,16 +62,7 @@ class Model{
             }
 
             self::AddJudg($age,"age",$judg);
-            // if($age !== ""){
-            //     if($judg !== "")$judg .= " AND ";
-            //     $judg .= " age = ${age} ";
-            // }
-
             self::AddJudg($gender_code,"gender_code",$judg);
-            // if($gender_code !== ""){
-            //     if($judg !== "")$judg .= " AND ";
-            //     $judg .= " gender_code = ${gender_code} ";
-            // }
             
             switch($active){
                 case ACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = true "; break;
@@ -103,8 +93,6 @@ class Model{
             $query .= " SELECT * FROM BRANCH_MASTER ";
 
             self::AddJudg($id,"id",$judg);
-            // if($id !== "")
-            //     $judg .= " id = '${id}' ";
 
             if($name !== ""){
                 if($judg !== "")$judg .= " AND ";
@@ -200,36 +188,13 @@ class Model{
         $judg = "";
 
         try{
-            $query .= " SELECT * FROM ORDER_INFO ";
+            $query .= " SELECT ORDER_INFO.*, COMMON_MASTER.name FROM ORDER_INFO ";
 
             self::AddJudg($id,"id",$judg);
-            // if($id !== "")
-            //     $judg .= " id = '${id}' ";
-
             self::AddJudg($branch_id,"branch_id",$judg);
-            // if($branch_id !== ""){
-            //     if($judg !== "")$judg .= " AND ";
-            //     $judg .= "branch_id = '${branch_id}";
-            // }
-
             self::AddJudg($customer_id,"customer_id",$judg);
-            // if($branch_id !== ""){
-            //     if($judg !== "")$judg .= " AND ";
-            //     $judg .= "branch_id = '${branch_id}";
-            // }
-
             self::AddJudg($transport_id,"transport_id",$judg);
-
             self::AddJudgBetween($order_date_from,$order_date_to,"order_date",$judg);
-            // $date_type = 0;
-            // if($order_date_from !== "")$date_type += DATE_FROM;
-            // if($order_date_to !== "")$date_type += DATE_TO;            
-            // switch($date_type){
-            //     case DATE_FROM: if($judg !== "")$judg .= " AND "; $judg .= "order_date < ${order_date_from}"; break;
-            //     case DATE_TO:  $judg .= "${order_date_to} < order_date"; break;
-            //     case DATE_FROM_TO: $judg .= "order_date BETWEEN ${order_date_from} AND ${order_date_to}"; break;
-            //     default: break;
-            // }
 
             $judg_state = "";
             foreach($order_state as $item){
@@ -241,8 +206,12 @@ class Model{
                 $judg .= " (${judg_state}) ";
             }
 
-            if($judg !== "")$query .= "WHERE ${judg}";
+            $query .= " LEFT JOIN COMMON_MASTER ON COMMON_MASTER.major_items = 'ORDER_STATE' AND COMMON_MASTER.sub_items = order_state ";
 
+            if($judg !== "")$query .= "WHERE ${judg}";
+            $query .= "ORDER BY id ASC";
+
+            Debug::debug_to_console_query($query);
             $data = self::$connection->query($query);
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
@@ -250,22 +219,63 @@ class Model{
         return $data;
     }
 
-    // 共通データ取得    
-    public static function getCommon($category, $id){
+    // 注文明細取得
+    public static function getOrderDetails($id){
         
         if(is_null(self::$connection))return -1;
 
-        $result = null;
-
+        $stmt = null;
         try{
-            $stmt = self::$connection->prepare('SELECT sub_items, name FROM COMMON_MASTER WHERE major_items = :category AND sub_items = :id');
-            $stmt->bindValue(':category', $category, PDO::PARAM_INT);
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-            $result = $stmt->execute();
+            $stmt = self::$connection->prepare('SELECT 
+            info.id, info.order_date, info.deposit_amount, state.name AS state,
+            detail.discount_rate,
+            customer.last_name, customer.first_name, customer.email, customer.tell,
+            product.name AS product, product.price, category.name AS category
+            
+            FROM order_info AS  info
+            
+            LEFT JOIN order_details AS detail
+            ON detail.order_id = info.id
+            
+            LEFT JOIN common_master AS state
+            ON state.major_items = "ORDER_STATE"
+            AND state.sub_items = info.order_state
+            
+            LEFT JOIN customer_info AS customer
+            ON customer.id = info.customer_id
+            
+            LEFT JOIN product_info AS product
+            ON product.id = detail.product_id
+            
+            LEFT JOIN common_master AS category
+            ON category.major_items = "CATEGORY"
+            AND category.sub_items = product.category_code
+            
+            WHERE info.id = :id
+            ORDER BY info.id, detail.detail_id');
+
+            $stmt->bindValue(':id', $id, PDO::PARAM_STR);
+            $stmt->execute();
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
-        return $result;
+        return $stmt;
+    }
+
+    // 共通データ取得    
+    public static function getCommon($category){
+        
+        if(is_null(self::$connection))return -1;
+
+        $stmt = null;
+        try{
+            $stmt = self::$connection->prepare('SELECT sub_items, name FROM COMMON_MASTER WHERE major_items = :category');
+            $stmt->bindValue(':category', $category, PDO::PARAM_STR);
+            $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $stmt;
     }
 
     // 通知情報取得
@@ -287,7 +297,7 @@ class Model{
     private static function AddJudg($item, $column, &$query){
         if($item !== ""){
             if($query !== "")$query .= " AND ";
-            $query .= "${column} = '${item}";
+               $query .= "${column} = '${item}'";
         }
     }
 
@@ -301,17 +311,17 @@ class Model{
         switch($date_type){
             case DATE_FROM:
                 if($query !== "")$query .= " AND ";
-                $query .= "${column} < ${from}";
+                $query .= " '${from}' < ${column} ";
                 break;
 
             case DATE_TO:
                 if($query !== "")$query .= " AND ";
-                $query .= "${to} < ${column}";
+                $query .= " ${column} < '${to}' ";
                 break;
 
             case DATE_FROM_TO:
                 if($query !== "")$query .= " AND ";
-                $query .= "${column} BETWEEN ${from} AND ${to}";
+                $query .= " ${column} BETWEEN '${from}' AND '${to}' ";
                 break;
 
             default: break;

@@ -33,7 +33,7 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
             <th class="label01">支店ID</th>
             <th class="label01">支店名</th>
             <th class="label01">略称</th>
-            <th class="label01">詳細</th>
+            <th class="label01"></th>
             </tr>
             <?php while($row = $data->fetch(PDO::FETCH_ASSOC)){ ?>
               <tr>

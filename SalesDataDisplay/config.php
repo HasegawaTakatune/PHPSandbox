@@ -15,6 +15,8 @@ define('REPORT',6);
 define('BRANCH_DETAILS',7);
 define('BRANCH_INSERT',8);
 
+define('ORDER_DETAILS',9);
+
 // パターンマッチタイプ
 define('PART',0);
 define('PERFECT',1);
@@ -24,10 +26,15 @@ define('ACTIVE',0);
 define('DEACTIVE',1);
 define('ACTIVE_DEACTIVE',2);
 
+// 注文ステータス
+define('CHECKING','0');
+define('DELIVERY','1');
+define('DELIVERED','2');
+
 // 共通
-define('GENDER','GENDER');
-define('CATEGORY','CATEGORY');
-define('ORDER_STATE','ORDER_STATE');
+// define('GENDER','GENDER');
+// define('CATEGORY','CATEGORY');
+// define('ORDER_STATE','ORDER_STATE');
 
 // デバッグ
 define('IS_DEBUG',true);
