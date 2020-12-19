@@ -228,7 +228,7 @@ class Model{
         try{
             $stmt = self::$connection->prepare('SELECT 
             info.id, info.order_date, info.deposit_amount, state.name AS state,
-            detail.discount_rate,
+            detail.detail_id, detail.discount_rate,
             customer.last_name, customer.first_name, customer.email, customer.tell,
             product.name AS product, product.price, category.name AS category
             
@@ -253,6 +253,44 @@ class Model{
             
             WHERE info.id = :id
             ORDER BY info.id, detail.detail_id');
+
+            $stmt->bindValue(':id', $id, PDO::PARAM_STR);
+            $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $stmt;
+    }
+
+    // 注文基本情報取得
+    public static function getOrderBaseInfo($id){
+        
+        if(is_null(self::$connection))return -1;
+
+        $stmt = null;
+        try{
+            $stmt = self::$connection->prepare('SELECT 
+            info.id, info.order_date, info.deposit_amount, state.name AS state,
+            customer.last_name, customer.first_name, customer.email, customer.tell,
+            SUM(product.price) AS total
+                        
+            FROM order_info AS  info
+
+            LEFT JOIN customer_info AS customer
+            ON customer.id = info.customer_id
+
+            LEFT JOIN order_details AS detail
+            ON detail.order_id = info.id
+            
+            LEFT JOIN common_master AS state
+            ON state.major_items = "ORDER_STATE"
+            AND state.sub_items = info.order_state
+                        
+            LEFT JOIN product_info AS product
+            ON product.id = detail.product_id
+                                    
+            WHERE info.id = :id
+            ORDER BY info.id');
 
             $stmt->bindValue(':id', $id, PDO::PARAM_STR);
             $stmt->execute();
