@@ -31,15 +31,15 @@ $data = Model::getBranch($branch_id,$branch_name,$match_type);
         <table>
             <tr>
             <th class="label01">支店ID</th>
-            <th class="label01">支店名</th>
-            <th class="label01">略称</th>
+            <th class="label01" style="width: 300px;">支店名</th>
+            <th class="label01" style="width: 100px;">略称</th>
             <th class="label01"></th>
             </tr>
             <?php while($row = $data->fetch(PDO::FETCH_ASSOC)){ ?>
               <tr>
               <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?>><?=$row["id"]?></td>
-              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?> style="width: 300px;"><?=$row["name"]?></td>
-              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?> style="width: 100px;"><?=$row["abbreviation"]?></td>
+              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?>><?=$row["name"]?></td>
+              <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?>><?=$row["abbreviation"]?></td>
               <td <?php echo ($row["active"]) ? 'class="label01"' : 'class="label01-disabled"'; ?>>
                   <form action="" method="POST">
                       <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">

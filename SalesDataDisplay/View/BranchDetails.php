@@ -33,17 +33,15 @@ $data = Model::getBranch($branch_id);
             </tr>
             <tr>
                 <th class="label01">支店名</th>
-                <td class="label02"><input type="text" name="upd_name" value="<?=$row["name"]?>" style="width: 250px;" maxlength="40" <?php echo ($is_active) ? 'class="inputItem01"' : 'class="inputItem01-disabled" disabled'; ?>></td>
-                <td><div class="err-msg"><?php if($is_update && $upd_name === "")echo MSG_REQUIRED_INPUT;?></div></td>
+                <td class="label02"><input type="text" name="upd_name" value="<?=$row["name"]?>" style="width: 250px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required></td>
             </tr>
             <tr>
                 <th class="label01">略称</th>
-                <td class="label02"><input type="text" name="upd_abbreviation" value="<?=$row["abbreviation"]?>" style="width: 100px;" maxlength="20" <?php echo ($is_active) ? 'class="inputItem01"' : 'class="inputItem01-disabled" disabled'; ?>></td>
-                <td><?php if($is_update && $upd_abbreviation === "")echo MSG_REQUIRED_INPUT;?></td>
+                <td class="label02"><input type="text" name="upd_abbreviation" value="<?=$row["abbreviation"]?>" style="width: 100px;" maxlength="20" <?php ActivStyleInp($is_active) ?> required></td>
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="更新" onclick="return confirm('更新しますか？')" <?php echo ($is_active) ? 'class="btn02"' : 'class="btn02-disabled" disabled'; ?>>
+                    <input type="submit" value="更新" onclick="return confirm('更新しますか？')" <?php ActivStyleBtn($is_active) ?>>
                     <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">
                     <input type="hidden" name="branch_id" value="<?=$row["id"]?>">
                     <input type="hidden" name="is_update" value="1">
@@ -52,7 +50,7 @@ $data = Model::getBranch($branch_id);
         </table>
         </form>
         <form action="" method="POST">
-            <input type="submit" value="削除" onclick="return confirm('削除しますか？')" <?php echo ($is_active) ? 'class="btn02"' : 'class="btn02-disabled" disabled'; ?>>
+            <input type="submit" value="削除" onclick="return confirm('削除しますか？')" <?php ActivStyleBtn($is_active) ?>>
             <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">
             <input type="hidden" name="branch_id" value="<?=$row["id"]?>">
             <input type="hidden" name="is_delete" value="1">

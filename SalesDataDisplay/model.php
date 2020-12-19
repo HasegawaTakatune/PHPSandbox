@@ -42,8 +42,12 @@ class Model{
         self::$connection = null;
     }
 
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※　データ取得（SELECT）　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+
     // 顧客情報取得
-    public static function getCustomer($id = "", $name = "", $age = "", $gender_code = "", $active = ACTIVE_DEACTIVE){
+    public static function getCustomer($id = "", $name = "", $match_type = PART, $active = ACTIVE_DEACTIVE){
         
         if(is_null(self::$connection))return null;
 
@@ -52,26 +56,26 @@ class Model{
         $judg = "";
 
         try{
-            $query .= " SELECT * FROM CUSTOMER_INFO ";
+            $query .= " SELECT info.id, info.last_name, info.first_name, info.age, gender.name AS gender, gender.sub_items AS gender_code, info.email, info.tell, info.active 
+            FROM CUSTOMER_INFO AS info 
+            LEFT JOIN COMMON_MASTER AS gender 
+            ON gender.major_items = 'GENDER' 
+            AND gender.sub_items = info.gender_code";
 
             self::AddJudg($id,"id",$judg);
 
             if($name !== ""){
-                if($judg !== "")$judg .= " AND ";
-                $judg .= " last_name LIKE '%${name}%' OR first_name LIKE '%${name}%' ";
-            }
-
-            self::AddJudg($age,"age",$judg);
-            self::AddJudg($gender_code,"gender_code",$judg);
+                switch($match_type){
+                    case PART: if($judg !== "")$judg .= " AND "; $judg .= " last_name LIKE '%${name}%' OR first_name LIKE '%${name}%' "; break;
+                    case PERFECT: if($judg !== "")$judg .= " AND "; $judg .= " last_name = '${name}' OR first_name = '${name}' "; break;
+                    default: break;
+                }
+            }   
             
-            switch($active){
-                case ACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = true "; break;
-                case DEACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = false "; break;
-                case ACTIVE_DEACTIVE: break;
-                default: break;
-            }
-
+            self::AddJudgActive($active,$judg);
+     
             if($judg != "")$query .= "WHERE ${judg}";
+            $query .= " ORDER BY id ASC";
 
             $data = self::$connection->query($query);
         }catch(Exception $e){
@@ -95,85 +99,21 @@ class Model{
             self::AddJudg($id,"id",$judg);
 
             if($name !== ""){
-                if($judg !== "")$judg .= " AND ";
-
                 switch($match_type){
-                    case PART: $judg .= " name LIKE '%${name}%' OR abbreviation LIKE '%${name}%' "; break;
-                    case PERFECT: $judg .= " name = '${name}' OR abbreviation = '${name}' "; break;
-                    default: $judg .= " 1 = 1 "; break;
+                    case PART: if($judg !== "")$judg .= " AND "; $judg .= " name LIKE '%${name}%' OR abbreviation LIKE '%${name}%' "; break;
+                    case PERFECT: if($judg !== "")$judg .= " AND "; $judg .= " name = '${name}' OR abbreviation = '${name}' "; break;
+                    default: break;
                 }
             }     
             
-            switch($active){
-                case ACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = true "; break;
-                case DEACTIVE: if($judg !== "")$judg .= " AND "; $judg .= " active = false "; break;
-                case ACTIVE_DEACTIVE: break;
-                default: break;
-            }
+            self::AddJudgActive($active,$judg);
 
             if($judg !== "")$query .= "WHERE ${judg}";
+            $query .= " ORDER BY id ASC";
 
             $data = self::$connection->query($query);
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
-        }
-        return $data;
-    }
-
-    // 支店情報更新
-    public static function updBranch($id, $name, $abbreviation){
-
-        if(is_null(self::$connection))return -1;
-
-        $result = false;
-
-        try{
-            $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET name = :name, abbreviation = :abbreviation WHERE id = :id');
-            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-            $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-            $result = $stmt->execute();
-        }catch(Exception $e){
-            error_log($e->getMessage(), 1);
-        }
-        return $result;
-    }
-
-    // 支店情報削除
-    public static function dltBranch($id){
-        
-        if(is_null(self::$connection))return -1;
-
-        $result = false;
-
-        try{
-            $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET active = false WHERE id = :id');
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-            $result = $stmt->execute();
-        }catch(Exception $e){
-            error_log($e->getMessage(), 1);
-        }
-        return $result;
-    }
-
-    // 支店情報新規登録
-    public static function instBranch($name, $abbreviation){
-        
-        if(is_null(self::$connection))return -1;
-
-        $data = null;
-        $result = false;
-
-        try{
-            $stmt = self::$connection->prepare('INSERT INTO BRANCH_MASTER (name, abbreviation, active) VALUES(:name, :abbreviation, true)');
-            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-            $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
-            $result = $stmt->execute();
-
-            if($result)
-                $data = self::$connection->query('SELECT * FROM BRANCH_MASTER ORDER BY id DESC LIMIT 1');
-        }catch(Exception $e){
-            error_log($e->getMessage());
         }
         return $data;
     }
@@ -209,7 +149,7 @@ class Model{
             $query .= " LEFT JOIN COMMON_MASTER ON COMMON_MASTER.major_items = 'ORDER_STATE' AND COMMON_MASTER.sub_items = order_state ";
 
             if($judg !== "")$query .= "WHERE ${judg}";
-            $query .= "ORDER BY id ASC";
+            $query .= " ORDER BY id ASC";
 
             Debug::debug_to_console_query($query);
             $data = self::$connection->query($query);
@@ -232,27 +172,27 @@ class Model{
             customer.last_name, customer.first_name, customer.email, customer.tell,
             product.name AS product, product.price, category.name AS category
             
-            FROM order_info AS  info
+            FROM ORDER_INFO AS  info
             
-            LEFT JOIN order_details AS detail
+            LEFT JOIN ORDER_DETAILS AS detail
             ON detail.order_id = info.id
             
-            LEFT JOIN common_master AS state
+            LEFT JOIN COMMON_MASTER AS state
             ON state.major_items = "ORDER_STATE"
             AND state.sub_items = info.order_state
             
-            LEFT JOIN customer_info AS customer
+            LEFT JOIN CUSTOMER_INFO AS customer
             ON customer.id = info.customer_id
             
-            LEFT JOIN product_info AS product
+            LEFT JOIN PRODUCT_INFO AS product
             ON product.id = detail.product_id
             
-            LEFT JOIN common_master AS category
+            LEFT JOIN COMMON_MASTER AS category
             ON category.major_items = "CATEGORY"
             AND category.sub_items = product.category_code
             
             WHERE info.id = :id
-            ORDER BY info.id, detail.detail_id');
+            ORDER BY info.id ASC, detail.detail_id ASC');
 
             $stmt->bindValue(':id', $id, PDO::PARAM_STR);
             $stmt->execute();
@@ -274,23 +214,23 @@ class Model{
             customer.last_name, customer.first_name, customer.email, customer.tell,
             SUM(product.price) AS total
                         
-            FROM order_info AS  info
+            FROM ORDER_INFO AS  info
 
-            LEFT JOIN customer_info AS customer
+            LEFT JOIN CUSTOMER_INFO AS customer
             ON customer.id = info.customer_id
 
-            LEFT JOIN order_details AS detail
+            LEFT JOIN ORDER_DETAILS AS detail
             ON detail.order_id = info.id
             
-            LEFT JOIN common_master AS state
+            LEFT JOIN COMMON_MASTER AS state
             ON state.major_items = "ORDER_STATE"
             AND state.sub_items = info.order_state
                         
-            LEFT JOIN product_info AS product
+            LEFT JOIN PRODUCT_INFO AS product
             ON product.id = detail.product_id
                                     
             WHERE info.id = :id
-            ORDER BY info.id');
+            ORDER BY info.id ASC');
 
             $stmt->bindValue(':id', $id, PDO::PARAM_STR);
             $stmt->execute();
@@ -307,7 +247,7 @@ class Model{
 
         $stmt = null;
         try{
-            $stmt = self::$connection->prepare('SELECT sub_items, name FROM COMMON_MASTER WHERE major_items = :category');
+            $stmt = self::$connection->prepare('SELECT sub_items, name FROM COMMON_MASTER WHERE major_items = :category ORDER BY sub_items ASC');
             $stmt->bindValue(':category', $category, PDO::PARAM_STR);
             $stmt->execute();
         }catch(Exception $e){
@@ -322,7 +262,6 @@ class Model{
         if(is_null(self::$connection))return null;
 
         $data = null;
-
         try{
             $data = self::$connection->query(' SELECT * FROM NOTICE_MASTER');
         }catch(Exception $e){
@@ -331,11 +270,138 @@ class Model{
         return $data;
     }
 
+
+
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※　データ更新（UPDATE）　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+
+    // 支店情報更新
+    public static function updBranch($id, $name, $abbreviation){
+
+        if(is_null(self::$connection))return -1;
+
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET name = :name, abbreviation = :abbreviation WHERE id = :id');
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
+    }
+
+    // 顧客情報更新
+    public static function updCustomer($id, $last_name, $first_name, $age, $gender, $email, $tell){
+
+        if(is_null(self::$connection))return -1;
+
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('UPDATE CUSTOMER_INFO SET last_name = :last_name, first_name = :first_name, age = :age, gender = :gender, email = :email, tell = :tell WHERE id = :id');
+            $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+            $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR);
+            $stmt->bindValue(':age', $age, PDO::PARAM_INT);
+            $stmt->bindValue(':gender', $gender, PDO::PARAM_INT);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':tell', $tell, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
+    }
+
+
+
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※　データ追加（INSERT）　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+
+    // 支店情報新規登録
+    public static function instBranch($name, $abbreviation){
+        
+        if(is_null(self::$connection))return -1;
+
+        $data = null;
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('INSERT INTO BRANCH_MASTER (name, abbreviation, active) VALUES(:name, :abbreviation, true)');
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
+            $result = $stmt->execute();
+
+            if($result)
+                $data = self::$connection->query('SELECT * FROM BRANCH_MASTER ORDER BY id DESC LIMIT 1');
+        }catch(Exception $e){
+            error_log($e->getMessage());
+        }
+        return $data;
+    }
+
+
+
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※　データ削除（DELETE）　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+
+    // 支店情報削除
+    public static function dltBranch($id){
+        
+        if(is_null(self::$connection))return -1;
+
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET active = false WHERE id = :id');
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
+    }
+
+    // 顧客情報削除
+    public static function dltCustomer($id){
+        
+        if(is_null(self::$connection))return -1;
+
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('UPDATE CUSTOMER_INFO SET active = false WHERE id = :id');
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
+    }
+
+    
+
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※　共有メソッド　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+
     // 判定式クエリ生成
     private static function AddJudg($item, $column, &$query){
         if($item !== ""){
             if($query !== "")$query .= " AND ";
                $query .= "${column} = '${item}'";
+        }
+    }
+
+    // 活性判定クエリ生成
+    private static function AddJudgActive($active, &$query){
+        switch($active){
+            case ACTIVE: if($query !== "")$query .= " AND "; $query .= " active = true "; break;
+            case DEACTIVE: if($query !== "")$query .= " AND "; $query .= " active = false "; break;
+            case ACTIVE_DEACTIVE: break;
+            default: break;
         }
     }
 
@@ -365,4 +431,5 @@ class Model{
             default: break;
         }
     }
+
 }

@@ -13,7 +13,7 @@ $order_date_to = (isset($_POST['order_date_to'])) ? $_POST['order_date_to'] : ""
 $order_state = (isset($_POST['order_state'])) ? $_POST['order_state'] : array();
 
 $data = Model::getOrder($id,$branch_id,$customer_id,$transport_id,$order_date_from,$order_date_to,$order_state);
-$common = Model::getCommon("ORDER_STATE");
+$state = Model::getCommon("ORDER_STATE");
 ?>
 <div id="content">
     <h2>注文一覧画面</h2>
@@ -45,7 +45,7 @@ $common = Model::getCommon("ORDER_STATE");
         <tr>
             <td><div class="label01">注文ステータス</div></td>
             <td class="terms">
-                <?php while ($row = $common->fetch(PDO::FETCH_ASSOC)){ ?>
+                <?php while ($row = $state->fetch(PDO::FETCH_ASSOC)){ ?>
                     <input type="checkbox" name="order_state[]" value="<?=$row["sub_items"]?>" <?php if(in_array($row["sub_items"],$order_state))echo "checked" ?>><?=$row["name"]?>
                 <?php } ?>
             </td>
@@ -57,23 +57,23 @@ $common = Model::getCommon("ORDER_STATE");
         <table>
             <tr>
             <th class="label01">注文ID</th>
-            <th class="label01">支店ID</th>
-            <th class="label01">顧客ID</th>
-            <th class="label01">輸送ID</th>
-            <th class="label01">注文日付</th>
-            <th class="label01">注文ステータス</th>
-            <th class="label01">入金額</th>
+            <th class="label01" style="width: 300px;">支店ID</th>
+            <th class="label01" style="width: 100px;">顧客ID</th>
+            <th class="label01" style="width: 100px;">輸送ID</th>
+            <th class="label01" style="width: 100px;">注文日付</th>
+            <th class="label01" style="width: 100px;">注文ステータス</th>
+            <th class="label01" style="width: 100px;">入金額</th>
             <th class="label01"></th>
             </tr>
             <?php while($row = $data->fetch(PDO::FETCH_ASSOC)){ ?>
               <tr>
               <td class="label01"><?=$row["id"]?></td>
-              <td class="label01" style="width: 300px;"><?=$row["branch_id"]?></td>
-              <td class="label01" style="width: 100px;"><?=$row["customer_id"]?></td>
-              <td class="label01" style="width: 100px;"><?=$row["transport_id"]?></td>
-              <td class="label01" style="width: 100px;"><?=$row["order_date"]?></td>
-              <td class="label01" style="width: 100px;"><?=$row["name"]?></td>
-              <td class="label01" style="width: 100px;"><?=$row["deposit_amount"]?></td>
+              <td class="label01"><?=$row["branch_id"]?></td>
+              <td class="label01"><?=$row["customer_id"]?></td>
+              <td class="label01"><?=$row["transport_id"]?></td>
+              <td class="label01"><?=$row["order_date"]?></td>
+              <td class="label01"><?=$row["name"]?></td>
+              <td class="label01"><?=$row["deposit_amount"]?></td>
               <td class="label01">
                   <form action="" method="POST">
                       <input type="hidden" name="screen_type" value="<?=ORDER_DETAILS?>">

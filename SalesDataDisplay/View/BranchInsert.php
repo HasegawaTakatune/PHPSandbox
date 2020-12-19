@@ -25,13 +25,11 @@ if($is_insert && $name !== "" && $abbreviation !== ""){
             </tr>
             <tr>
                 <th class="label01">支店名</th>
-                <td class="label02"><input type="text" name="name" value="<?=$name?>" style="width: 250px;" class="inputItem01" maxlength="40"></td>
-                <td><div class="err-msg"><?php if($is_insert && $name === "")echo MSG_REQUIRED_INPUT;?></div></td>
+                <td class="label02"><input type="text" name="name" value="<?=$name?>" style="width: 250px;" class="inputItem01" maxlength="40" required></td>
             </tr>
             <tr>
                 <th class="label01">略称</th>
-                <td class="label02"><input type="text" name="abbreviation" value="<?=$abbreviation?>" style="width: 100px;" class="inputItem01" maxlength="20"></td>
-                <td><?php if($is_insert && $abbreviation === "")echo MSG_REQUIRED_INPUT;?></td>
+                <td class="label02"><input type="text" name="abbreviation" value="<?=$abbreviation?>" style="width: 100px;" class="inputItem01" maxlength="20" required></td>
             </tr>            
             <tr>
                 <td>

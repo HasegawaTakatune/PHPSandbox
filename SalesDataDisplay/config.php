@@ -17,6 +17,8 @@ define('BRANCH_INSERT',8);
 
 define('ORDER_DETAILS',9);
 
+define('CUSTOMER_DETAILS',10);
+
 // パターンマッチタイプ
 define('PART',0);
 define('PERFECT',1);
@@ -38,4 +40,9 @@ define('DELIVERED','2');
 
 // デバッグ
 define('IS_DEBUG',true);
+
+// 活性スタイル
+function ActivStyle($active){if(!$active)echo 'disabled';}
+function ActivStyleInp($active){echo ($active) ? 'class="inputItem01"' : 'class="inputItem01-disabled" disabled';}
+function ActivStyleBtn($active){echo ($active) ? 'class="btn02"' : 'class="btn02-disabled" disabled';}
 ?>
