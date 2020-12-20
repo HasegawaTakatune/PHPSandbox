@@ -9,9 +9,9 @@ $data = Model::getOrderDetails($id);
 $baseData = Model::getOrderBaseInfo($id)
 ?>
 <div id="content">
-    <h2>商品明細画面</h2>
+    <h2>注文明細画面</h2>
 
-    <?php $row = $data->fetch(PDO::FETCH_ASSOC); ?>
+    <?php $row = $baseData->fetch(PDO::FETCH_ASSOC); ?>
     <table>
         <tr>
             <td><div class="label01" style="width: 70px;">注文ID</div></td>

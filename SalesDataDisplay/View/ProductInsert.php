@@ -15,7 +15,7 @@ $row = null;
 if($is_insert && $name !== "" && $category !== "" && $price !== ""){
     $data = Model::instProduct($name, $category, $price);
 }
-$common = Model::getCommon("GENDER");
+$common = Model::getCommon("CATEGORY");
 ?>
 <div id="content">
     <h2>商品登録画面</h2>
@@ -34,10 +34,12 @@ $common = Model::getCommon("GENDER");
             </tr>
             <tr>
                 <th class="label01">カテゴリ</th>
-                <td class="terms">
-                <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
-                    <input type="radio" name="category" value="<?=$item["sub_items"]?>" <?php if($item["sub_items"] == $category)echo "checked"; ?> required><?=$item["name"]?>
-                <?php } ?>
+                <td>
+                    <select name="category" class="label01" style="margin-left: 5px;" required>
+                    <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
+                        <option value="<?=$item["sub_items"]?>" class="label01" <?php if($item["sub_items"] == $category)echo "selected"; ?>><?=$item["name"]?></option>
+                    <?php } ?>
+                    </select>
                 </td>
             </tr>
             <tr>
