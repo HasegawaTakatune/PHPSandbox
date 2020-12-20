@@ -4,9 +4,6 @@ require_once '../config.php';
 require_once '../Model.php';
 require_once '../Message.php';
 
-define('PATTERN_TELL','^0[789]0-[0-9]{4}-[0-9]{4}$');
-define('PATTERN_EMAIL','^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$');
-
 $id = (isset($_POST['id']) ? $_POST['id'] : "");
 $last_name = (isset($_POST['last_name'])) ? trim($_POST['last_name']) : "";
 $first_name = (isset($_POST['first_name'])) ? trim($_POST['first_name']) : "";
@@ -49,7 +46,7 @@ $common = Model::getCommon("GENDER");
             </tr>
             <tr>
                 <th class="label01">年齢</th>
-                <td class="label02"><input type="number" name="age" value="<?=$row["age"]?>" style="width: 100px;" maxlength="20" <?php ActivStyleInp($is_active) ?> required pattern="^[0-9]+$"></td>
+                <td class="label02"><input type="number" name="age" value="<?=$row["age"]?>" style="width: 100px;" min="0" max="200" <?php ActivStyleInp($is_active) ?> required pattern="^[0-9]+$"></td>
             </tr>
             <tr>
                 <th class="label01">性別</th>
@@ -61,11 +58,11 @@ $common = Model::getCommon("GENDER");
             </tr>
             <tr>
                 <th class="label01">メール</th>
-                <td class="label02"><input type="email" name="email" value="<?=$row["email"]?>" style="width: 220px;" maxlength="20" <?php ActivStyleInp($is_active) ?> required pattern="<?=PATTERN_EMAIL?>"></td>
+                <td class="label02"><input type="email" name="email" value="<?=$row["email"]?>" style="width: 220px;" <?php ActivStyleInp($is_active) ?> required pattern="<?=PATTERN_EMAIL?>"></td>
             </tr>
             <tr>
                 <th class="label01">電話番号</th>
-                <td class="label02"><input type="text" name="tell" value="<?=$row["tell"]?>" style="width: 120px;" maxlength="20" <?php ActivStyleInp($is_active) ?> required pattern="<?=PATTERN_TELL?>"></td>
+                <td class="label02"><input type="text" name="tell" value="<?=$row["tell"]?>" style="width: 120px;" maxlength="15" <?php ActivStyleInp($is_active) ?> required pattern="<?=PATTERN_TELL?>"></td>
             </tr>
             <tr>
                 <td>
@@ -85,7 +82,7 @@ $common = Model::getCommon("GENDER");
                     <input type="hidden" name="is_delete" value="1">
                 </td>
             </tr>
-            </form>
+        </form>
         </table>       
         <?php if($is_update) echo ($result)? MSG_SUCCESS_UPDATE : MSG_FAILED_UPDATE; ?>
 </div>

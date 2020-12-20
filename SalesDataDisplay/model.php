@@ -60,7 +60,7 @@ class Model{
             FROM CUSTOMER_INFO AS info 
             LEFT JOIN COMMON_MASTER AS gender 
             ON gender.major_items = 'GENDER' 
-            AND gender.sub_items = info.gender_code";
+            AND gender.sub_items = info.gender_code ";
 
             self::AddJudg($id,"id",$judg);
 
@@ -74,8 +74,8 @@ class Model{
             
             self::AddJudgActive($active,$judg);
      
-            if($judg != "")$query .= "WHERE ${judg}";
-            $query .= " ORDER BY id ASC";
+            if($judg != "")$query .= " WHERE ${judg} ";
+            $query .= " ORDER BY id ASC ";
 
             $data = self::$connection->query($query);
         }catch(Exception $e){
@@ -135,16 +135,7 @@ class Model{
             self::AddJudg($customer_id,"customer_id",$judg);
             self::AddJudg($transport_id,"transport_id",$judg);
             self::AddJudgBetween($order_date_from,$order_date_to,"order_date",$judg);
-
-            $judg_state = "";
-            foreach($order_state as $item){
-                if($judg_state !== "")$judg_state .= " OR ";
-                $judg_state .= " order_state = ${item} ";
-            }
-            if($judg_state !== ""){
-                if($judg !== "") $judg .= " AND ";
-                $judg .= " (${judg_state}) ";
-            }
+            self::AddJudgArray($order_state, "order_state", $judg);
 
             $query .= " LEFT JOIN COMMON_MASTER ON COMMON_MASTER.major_items = 'ORDER_STATE' AND COMMON_MASTER.sub_items = order_state ";
 
@@ -240,6 +231,46 @@ class Model{
         return $stmt;
     }
 
+    // 商品情報取得
+    public static function getProduct($id = "", $name = "", $match_type = PART, $category = array(), $active = ACTIVE_DEACTIVE){
+        
+        if(is_null(self::$connection))return null;
+
+        $data = null;
+        $query = "";
+        $judg = "";
+
+        try{
+            $query .= " SELECT info.id, info.name, info.price, info.active, common.name AS category, info.category_code
+            FROM PRODUCT_INFO AS info
+            LEFT JOIN COMMON_MASTER AS common
+            ON common.major_items = 'CATEGORY'
+            AND common.sub_items = info.category_code ";
+
+            self::AddJudg($id,"id",$judg);
+
+            if($name !== ""){
+                switch($match_type){
+                    case PART: if($judg !== "")$judg .= " AND "; $judg .= " info.name LIKE '%${name}%' "; break;
+                    case PERFECT: if($judg !== "")$judg .= " AND "; $judg .= " info.name = '${name}' "; break;
+                    default: break;
+                }
+            }
+            
+            self::AddJudgArray($category,"category_code",$judg);
+
+            self::AddJudgActive($active,$judg);
+     
+            if($judg != "")$query .= " WHERE ${judg} ";
+            $query .= " ORDER BY id ASC ";
+
+            $data = self::$connection->query($query);
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $data;
+    }
+
     // 共通データ取得    
     public static function getCommon($category){
         
@@ -316,6 +347,25 @@ class Model{
         return $result;
     }
 
+    // 商品情報更新
+    public static function updProduct($id, $name, $category, $price){
+
+        if(is_null(self::$connection))return -1;
+
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('UPDATE PRODUCT_INFO SET name = :name, category_code = :category, price = :price WHERE id = :id');
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindValue(':category', $category, PDO::PARAM_INT);
+            $stmt->bindParam(':price', $price, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
+    }
+
 
 
     // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
@@ -337,6 +387,53 @@ class Model{
 
             if($result)
                 $data = self::$connection->query('SELECT * FROM BRANCH_MASTER ORDER BY id DESC LIMIT 1');
+        }catch(Exception $e){
+            error_log($e->getMessage());
+        }
+        return $data;
+    }
+
+    // 顧客情報新規登録
+    public static function instCustomer($last_name, $first_name, $age, $gender, $email, $tell){
+        
+        if(is_null(self::$connection))return -1;
+
+        $data = null;
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('INSERT INTO CUSTOMER_INFO (last_name, first_name, age, gender, email, tell, active) VALUES(:last_name, :first_name, :age, :gender, :email, :tell, true)');
+            $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+            $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR);
+            $stmt->bindValue(':age', $age, PDO::PARAM_INT);
+            $stmt->bindValue(':gender_code', $gender, PDO::PARAM_INT);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':tell', $tell, PDO::PARAM_STR);
+            $result = $stmt->execute();
+
+            if($result)
+                $data = self::$connection->query('SELECT * FROM CUSTOMER_INFO ORDER BY id DESC LIMIT 1');
+        }catch(Exception $e){
+            error_log($e->getMessage());
+        }
+        return $data;
+    }
+
+    // 商品情報新規登録
+    public static function instProduct($name, $category, $price){
+        
+        if(is_null(self::$connection))return -1;
+
+        $data = null;
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('INSERT INTO PRODUCT_INFO (name, category_code, price, active) VALUES(:name, :category, :price, true)');
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindValue(':category_code', $category, PDO::PARAM_INT);
+            $stmt->bindParam(':price', $price, PDO::PARAM_STR);
+            $result = $stmt->execute();
+
+            if($result)
+                $data = self::$connection->query('SELECT * FROM PRODUCT_INFO ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
             error_log($e->getMessage());
         }
@@ -381,6 +478,22 @@ class Model{
         return $result;
     }
 
+    // 商品情報削除
+    public static function dltProduct($id){
+        
+        if(is_null(self::$connection))return -1;
+
+        $result = false;
+        try{
+            $stmt = self::$connection->prepare('UPDATE PRODUCT_INFO SET active = false WHERE id = :id');
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        return $result;
+    }
+
     
 
     // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
@@ -411,6 +524,8 @@ class Model{
         $date_type = 0;
         if($from !== "")$date_type += DATE_FROM;
         if($to !== "")$date_type += DATE_TO;
+
+        if(strtotime($to) < strtotime($from))return;
         
         switch($date_type){
             case DATE_FROM:
@@ -430,6 +545,19 @@ class Model{
 
             default: break;
         }
+    }
+
+    // 配列指定クエリ生成
+    private static function AddJudgArray($array, $column, &$query){
+        $judg_state = "";
+            foreach($array as $item){
+                if($judg_state !== "")$judg_state .= " OR ";
+                $judg_state .= " ${column} = ${item} ";
+            }
+            if($judg_state !== ""){
+                if($query !== "") $query .= " AND ";
+                $query .= " (${judg_state}) ";
+            }
     }
 
 }

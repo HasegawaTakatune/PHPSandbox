@@ -9,9 +9,9 @@ $data = Model::getOrderDetails($id);
 $baseData = Model::getOrderBaseInfo($id)
 ?>
 <div id="content">
-    <h2>注文明細画面</h2>
+    <h2>商品明細画面</h2>
 
-    <?php foreach($baseData as $row){ ?>
+    <?php $row = $data->fetch(PDO::FETCH_ASSOC); ?>
     <table>
         <tr>
             <td><div class="label01" style="width: 70px;">注文ID</div></td>
@@ -33,8 +33,7 @@ $baseData = Model::getOrderBaseInfo($id)
             <td><div class="label01" style="width: 70px;">電話</div></td>
             <td class="label02"><input type="text" value="<?=$row["tell"]?>" style="width: 120px;" class="inputItem01-disabled" disabled></td>
         </tr>
-    </table>
-    <?php break; } ?>
+    </table>    
 
     <div class="scrollBox02">
         <table>

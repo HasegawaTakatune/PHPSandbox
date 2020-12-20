@@ -4,20 +4,20 @@ require_once '../config.php';
 require_once '../Model.php';
 require_once '../Message.php';
 
-$branch_id = (isset($_POST['branch_id']) ? $_POST['branch_id'] : "");
-$upd_name = (isset($_POST['upd_name'])) ? trim($_POST['upd_name']) : "";
-$upd_abbreviation = (isset($_POST['upd_abbreviation'])) ? trim($_POST['upd_abbreviation']) : "";
+$id = (isset($_POST['id']) ? $_POST['id'] : "");
+$name = (isset($_POST['name'])) ? trim($_POST['name']) : "";
+$abbreviation = (isset($_POST['abbreviation'])) ? trim($_POST['abbreviation']) : "";
 $is_update = (isset($_POST['is_update'])) ? true : false;
 $is_delete = (isset($_POST['is_delete'])) ? true : false;
 
 $result = false;
 
-if($is_update && $branch_id !== "" && $upd_name !== "" && $upd_abbreviation !== ""){
-    $result = Model::updBranch($branch_id,$upd_name,$upd_abbreviation);    
-}else if($is_delete && $branch_id !== ""){
-    $result = Model::dltBranch($branch_id);
+if($is_update && $id !== "" && $name !== "" && $abbreviation !== ""){
+    $result = Model::updBranch($id,$name,$abbreviation);    
+}else if($is_delete && $id !== ""){
+    $result = Model::dltBranch($id);
 }
-$data = Model::getBranch($branch_id);
+$data = Model::getBranch($id);
 ?>
 <div id="content">
     <h2>支店詳細画面</h2>
@@ -33,17 +33,17 @@ $data = Model::getBranch($branch_id);
             </tr>
             <tr>
                 <th class="label01">支店名</th>
-                <td class="label02"><input type="text" name="upd_name" value="<?=$row["name"]?>" style="width: 250px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required></td>
+                <td class="label02"><input type="text" name="name" value="<?=$row["name"]?>" style="width: 250px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required></td>
             </tr>
             <tr>
                 <th class="label01">略称</th>
-                <td class="label02"><input type="text" name="upd_abbreviation" value="<?=$row["abbreviation"]?>" style="width: 100px;" maxlength="20" <?php ActivStyleInp($is_active) ?> required></td>
+                <td class="label02"><input type="text" name="abbreviation" value="<?=$row["abbreviation"]?>" style="width: 100px;" maxlength="20" <?php ActivStyleInp($is_active) ?> required></td>
             </tr>
             <tr>
                 <td>
                     <input type="submit" value="更新" onclick="return confirm('更新しますか？')" <?php ActivStyleBtn($is_active) ?>>
                     <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">
-                    <input type="hidden" name="branch_id" value="<?=$row["id"]?>">
+                    <input type="hidden" name="id" value="<?=$row["id"]?>">
                     <input type="hidden" name="is_update" value="1">
                 </td>
             </tr>
@@ -52,7 +52,7 @@ $data = Model::getBranch($branch_id);
         <form action="" method="POST">
             <input type="submit" value="削除" onclick="return confirm('削除しますか？')" <?php ActivStyleBtn($is_active) ?>>
             <input type="hidden" name="screen_type" value="<?=BRANCH_DETAILS?>">
-            <input type="hidden" name="branch_id" value="<?=$row["id"]?>">
+            <input type="hidden" name="id" value="<?=$row["id"]?>">
             <input type="hidden" name="is_delete" value="1">
         </form>
         <?php if($is_update) echo ($result)? MSG_SUCCESS_UPDATE : MSG_FAILED_UPDATE; ?>

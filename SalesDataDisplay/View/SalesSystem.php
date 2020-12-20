@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <!-- 
 TODO:ログイン情報の保持につてい、ログイン画面も含めて説明してくれています。
@@ -11,7 +12,6 @@ require_once '../Model.php';
 require_once '../Debug.php';
 Model::StartConnect();
 ?>
-<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -28,16 +28,19 @@ Model::StartConnect();
 
   $type = (isset($_POST['screen_type'])) ? $_POST['screen_type'] : -1;
   switch($type){
-    case HOME: include 'Home.php'; break;
-    case BRANCH: include 'BranchInfo.php'; break;
-    case BRANCH_DETAILS: include 'BranchDetails.php'; break;
-    case BRANCH_INSERT: include 'BranchInsert.php'; break;
-    case ORDER: include 'OrderInfo.php'; break;
-    case ORDER_DETAILS: include 'OrderDetails.php'; break;
-    case CUSTOMER: include 'CustomerInfo.php'; break;
-    case CUSTOMER_DETAILS: include 'CustomerDetails.php'; break;
-    case PRODUCT: include ''; break;
-    case REPORT: include ''; break;
+    case HOME:              include 'Home.php'; break;
+    case BRANCH:            include 'BranchInfo.php'; break;
+    case BRANCH_DETAILS:    include 'BranchDetails.php'; break;
+    case BRANCH_INSERT:     include 'BranchInsert.php'; break;
+    case ORDER:             include 'OrderInfo.php'; break;
+    case ORDER_DETAILS:     include 'OrderDetails.php'; break;
+    case CUSTOMER:          include 'CustomerInfo.php'; break;
+    case CUSTOMER_DETAILS:  include 'CustomerDetails.php'; break;
+    case CUSTOMER_INSERT:   include 'CustomerInsert.php'; break;
+    case PRODUCT:           include 'ProductInfo.php'; break;
+    case PRODUCT_DETAILS:   include 'ProductDetails.php'; break;
+    case PRODUCT_INSERT:    include 'ProductInsert.php'; break;
+    case REPORT:            include 'Report.php'; break;
     default: include 'NotScreen.php'; break;
   }
   ?>
