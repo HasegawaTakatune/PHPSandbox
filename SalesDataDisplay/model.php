@@ -6,10 +6,6 @@ define('DATE_FROM',1);
 define('DATE_TO',2);
 define('DATE_FROM_TO',3);
 
-// define('JUDG_EQUALS',0);        // = (イコール)
-// define('JUDG_GREATER_THAN',1);  // > (大なり)
-// define('JUDG_LESS_THAN',2);     // < (小なり)
-
 class Model{
 
     // 接続インスタンス
@@ -51,37 +47,44 @@ class Model{
         
         if(is_null(self::$connection))return null;
 
-        $data = null;
-        $query = "";
-        $judg = "";
-
+        $stmt = null;
         try{
-            $query .= " SELECT info.id, info.last_name, info.first_name, info.age, gender.name AS gender, gender.sub_items AS gender_code, info.email, info.tell, info.active 
+            $query = "";
+            $judg = "";
+
+            $query .= " SELECT 
+            info.id, info.last_name, info.first_name, info.age, 
+            gender.name AS gender, gender.sub_items AS gender_code, 
+            info.email, info.tell, info.active 
             FROM CUSTOMER_INFO AS info 
             LEFT JOIN COMMON_MASTER AS gender 
             ON gender.major_items = 'GENDER' 
             AND gender.sub_items = info.gender_code ";
-
-            self::AddJudg($id,"id",$judg);
-
+     
+            if($id !== "")$judg .= " id = :id AND ";
             if($name !== ""){
                 switch($match_type){
-                    case PART: if($judg !== "")$judg .= " AND "; $judg .= " last_name LIKE '%${name}%' OR first_name LIKE '%${name}%' "; break;
-                    case PERFECT: if($judg !== "")$judg .= " AND "; $judg .= " last_name = '${name}' OR first_name = '${name}' "; break;
+                    case PART: $judg .= " last_name LIKE :name1 OR first_name LIKE :name2 AND "; $name = "%${name}%"; break;
+                    case PERFECT: $judg .= " last_name = :name1 OR first_name = :name2 AND "; break;
                     default: break;
                 }
-            }   
-            
+            }
             self::AddJudgActive($active,$judg);
-     
-            if($judg != "")$query .= " WHERE ${judg} ";
-            $query .= " ORDER BY id ASC ";
 
-            $data = self::$connection->query($query);
+            $query .= " WHERE ${judg} 1 = 1 ORDER BY id ASC ";
+
+            $stmt = self::$connection->prepare($query);
+            if($id !== "")$stmt->bindParam(':id', $id, PDO::PARAM_STR);
+            if($name !== ""){
+                $stmt->bindParam(':name1', $name, PDO::PARAM_STR);
+                $stmt->bindParam(':name2', $name, PDO::PARAM_STR);
+            }
+            $stmt->execute();
+
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
-        return $data;
+        return $stmt;
     }
 
     // 支店情報取得
@@ -89,33 +92,37 @@ class Model{
         
         if(is_null(self::$connection))return null;
 
-        $data = null;
-        $query = "";
-        $judg = "";
-
+        $stmt = null;
         try{
+            $query = "";
+            $judg = "";
+
             $query .= " SELECT * FROM BRANCH_MASTER ";
 
-            self::AddJudg($id,"id",$judg);
-
+            if($id !== "")$judg .= " id = :id AND ";
             if($name !== ""){
                 switch($match_type){
-                    case PART: if($judg !== "")$judg .= " AND "; $judg .= " name LIKE '%${name}%' OR abbreviation LIKE '%${name}%' "; break;
-                    case PERFECT: if($judg !== "")$judg .= " AND "; $judg .= " name = '${name}' OR abbreviation = '${name}' "; break;
+                    case PART: if($judg !== "")$judg .= " AND "; $judg .= " name LIKE :name1 OR abbreviation LIKE :name2 AND "; $name = "%${name}%"; break;
+                    case PERFECT: if($judg !== "")$judg .= " AND "; $judg .= " name = :name1 OR abbreviation = :name2 AND "; break;
                     default: break;
                 }
-            }     
-            
+            }
             self::AddJudgActive($active,$judg);
 
-            if($judg !== "")$query .= "WHERE ${judg}";
-            $query .= " ORDER BY id ASC";
+            $query .= " WHERE ${judg} 1 = 1 ORDER BY id ASC ";
 
-            $data = self::$connection->query($query);
+            $stmt = self::$connection->prepare($query);
+            if($id !== "")$stmt->bindParam(':id', $id, PDO::PARAM_STR);
+            if($name !== ""){
+                $stmt->bindParam(':name1', $name, PDO::PARAM_STR);
+                $stmt->bindParam(':name2', $name, PDO::PARAM_STR);
+            }
+            $stmt->execute();
+
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
-        return $data;
+        return $stmt;
     }
 
     // 注文情報取得
@@ -123,31 +130,56 @@ class Model{
         
         if(is_null(self::$connection))return null;
 
-        $data = null;
-        $query = "";
-        $judg = "";
-
+        $stmt = null;
         try{
-            $query .= " SELECT ORDER_INFO.*, COMMON_MASTER.name FROM ORDER_INFO ";
+            $type = 0;
+            if($order_date_from !== "")$type += DATE_FROM;
+            if($order_date_to !== "")$type += DATE_TO;
 
-            self::AddJudg($id,"id",$judg);
-            self::AddJudg($branch_id,"branch_id",$judg);
-            self::AddJudg($customer_id,"customer_id",$judg);
-            self::AddJudg($transport_id,"transport_id",$judg);
-            self::AddJudgBetween($order_date_from,$order_date_to,"order_date",$judg);
-            self::AddJudgArray($order_state, "order_state", $judg);
+            $judg = "";
+            $query = "";
+            $length = count($order_state);
 
-            $query .= " LEFT JOIN COMMON_MASTER ON COMMON_MASTER.major_items = 'ORDER_STATE' AND COMMON_MASTER.sub_items = order_state ";
+            $query .= " SELECT ORDER_INFO.*, COMMON_MASTER.name 
+            FROM ORDER_INFO  
+            LEFT JOIN COMMON_MASTER 
+            ON COMMON_MASTER.major_items = 'ORDER_STATE' 
+            AND COMMON_MASTER.sub_items = order_state ";
 
-            if($judg !== "")$query .= "WHERE ${judg}";
-            $query .= " ORDER BY id ASC";
+            if($id !== "")$judg .= " id = :id AND ";
+            if($branch_id !== "")$judg .= " branch_id = :branch_id AND ";
+            if($customer_id !== "")$judg .= " customer_id = :customer_id AND ";
+            if($transport_id !== "")$judg .= " transport_id = :transport_id AND ";
+            self::AddJudgBetween("order_date", $type, $judg);
+            self::AddJudgArray($length, "order_state", $judg);
 
-            Debug::debug_to_console_query($query);
-            $data = self::$connection->query($query);
+            $query .= " WHERE ${judg} 1 = 1 ORDER BY id ASC ";
+
+            $stmt = self::$connection->prepare($query);
+            if($id !== "")$stmt->bindParam(':id', $id, PDO::PARAM_STR);
+            if($branch_id !== "")$stmt->bindParam(':branch_id', $branch_id, PDO::PARAM_STR);
+            if($customer_id !== "")$stmt->bindParam(':customer_id', $customer_id, PDO::PARAM_STR);
+            if($transport_id !== "")$stmt->bindParam(':transport_id', $transport_id, PDO::PARAM_STR);
+            switch($type){
+                case DATE_FROM: 
+                    $stmt->bindParam(':order_date_from', $order_date_from, PDO::PARAM_STR); 
+                    break;                
+                case DATE_TO: 
+                    $stmt->bindParam(':order_date_to', $order_date_to, PDO::PARAM_STR); 
+                    break;
+                case DATE_FROM_TO: 
+                    $stmt->bindParam(':order_date_from', $order_date_from, PDO::PARAM_STR);
+                    $stmt->bindParam(':order_date_to', $order_date_to, PDO::PARAM_STR); 
+                    break;
+                default: break;
+            }
+            for($i = 0;$i < $length; $i++)$stmt->bindParam(":order_state${i}", $order_state[$i], PDO::PARAM_STR);
+            $stmt->execute();
+
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
-        return $data;
+        return $stmt;
     }
 
     // 注文明細取得
@@ -187,6 +219,7 @@ class Model{
 
             $stmt->bindValue(':id', $id, PDO::PARAM_STR);
             $stmt->execute();
+
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
@@ -225,6 +258,7 @@ class Model{
 
             $stmt->bindValue(':id', $id, PDO::PARAM_STR);
             $stmt->execute();
+
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
@@ -236,39 +270,42 @@ class Model{
         
         if(is_null(self::$connection))return null;
 
-        $data = null;
-        $query = "";
-        $judg = "";
-
+        $stmt = null;
         try{
-            $query .= " SELECT info.id, info.name, info.price, info.active, common.name AS category, info.category_code
+            $judg = "";
+            $query = "";
+            $length = count($category);
+
+            $query .= " SELECT 
+            info.id, info.name, info.price, info.active, common.name AS category, info.category_code
             FROM PRODUCT_INFO AS info
             LEFT JOIN COMMON_MASTER AS common
             ON common.major_items = 'CATEGORY'
             AND common.sub_items = info.category_code ";
 
-            self::AddJudg($id,"id",$judg);
-
+            if($id !== "")$judg .= " id = :id AND ";
             if($name !== ""){
                 switch($match_type){
-                    case PART: if($judg !== "")$judg .= " AND "; $judg .= " info.name LIKE '%${name}%' "; break;
-                    case PERFECT: if($judg !== "")$judg .= " AND "; $judg .= " info.name = '${name}' "; break;
+                    case PART: if($judg !== "") $judg .= " info.name LIKE :name AND "; $name = "%${name}%"; break;
+                    case PERFECT: if($judg !== "") $judg .= " info.name = :name AND "; break;
                     default: break;
                 }
-            }
-            
-            self::AddJudgArray($category,"category_code",$judg);
-
+            }            
+            self::AddJudgArray($length,"category_code",$judg);
             self::AddJudgActive($active,$judg);
      
-            if($judg != "")$query .= " WHERE ${judg} ";
-            $query .= " ORDER BY id ASC ";
+            $query .= " WHERE ${judg} 1 = 1 ORDER BY id ASC ";
 
-            $data = self::$connection->query($query);
+            $stmt = self::$connection->prepare($query);
+            if($id !== "")$stmt->bindParam(':id', $id, PDO::PARAM_STR);
+            if($name !== "")$stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            for($i = 0; $i < $length; $i++)$stmt->bindParam(":category_code${i}", $category[$i], PDO::PARAM_STR);
+            $stmt->execute();
+
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
-        return $data;
+        return $stmt;
     }
 
     // 共通データ取得    
@@ -292,13 +329,14 @@ class Model{
 
         if(is_null(self::$connection))return null;
 
-        $data = null;
+        $stmt = null;
         try{
-            $data = self::$connection->query(' SELECT * FROM NOTICE_MASTER');
+            $stmt = self::$connection->prepare(' SELECT * FROM NOTICE_MASTER ');
+            $stmt->execute();
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
-        return $data;
+        return $stmt;
     }
 
 
@@ -314,12 +352,15 @@ class Model{
 
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET name = :name, abbreviation = :abbreviation WHERE id = :id');
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
+            self::$connection->commit();
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
         return $result;
@@ -332,6 +373,7 @@ class Model{
 
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('UPDATE CUSTOMER_INFO SET last_name = :last_name, first_name = :first_name, age = :age, gender = :gender, email = :email, tell = :tell WHERE id = :id');
             $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR);
             $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR);
@@ -341,7 +383,9 @@ class Model{
             $stmt->bindParam(':tell', $tell, PDO::PARAM_STR);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
+            self::$connection->commit();
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
         return $result;
@@ -354,13 +398,16 @@ class Model{
 
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('UPDATE PRODUCT_INFO SET name = :name, category_code = :category, price = :price WHERE id = :id');
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindValue(':category', $category, PDO::PARAM_INT);
             $stmt->bindParam(':price', $price, PDO::PARAM_STR);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
+            self::$connection->commit();
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
         return $result;
@@ -380,14 +427,17 @@ class Model{
         $data = null;
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('INSERT INTO BRANCH_MASTER (name, abbreviation, active) VALUES(:name, :abbreviation, true)');
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':abbreviation', $abbreviation, PDO::PARAM_STR);
             $result = $stmt->execute();
+            self::$connection->commit();
 
             if($result)
                 $data = self::$connection->query('SELECT * FROM BRANCH_MASTER ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage());
         }
         return $data;
@@ -401,6 +451,7 @@ class Model{
         $data = null;
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('INSERT INTO CUSTOMER_INFO (last_name, first_name, age, gender, email, tell, active) VALUES(:last_name, :first_name, :age, :gender, :email, :tell, true)');
             $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR);
             $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR);
@@ -409,10 +460,12 @@ class Model{
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':tell', $tell, PDO::PARAM_STR);
             $result = $stmt->execute();
+            self::$connection->commit();
 
             if($result)
                 $data = self::$connection->query('SELECT * FROM CUSTOMER_INFO ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage());
         }
         return $data;
@@ -426,15 +479,18 @@ class Model{
         $data = null;
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('INSERT INTO PRODUCT_INFO (name, category_code, price, active) VALUES(:name, :category, :price, true)');
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindValue(':category_code', $category, PDO::PARAM_INT);
             $stmt->bindParam(':price', $price, PDO::PARAM_STR);
             $result = $stmt->execute();
+            self::$connection->commit();
 
             if($result)
                 $data = self::$connection->query('SELECT * FROM PRODUCT_INFO ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage());
         }
         return $data;
@@ -453,10 +509,13 @@ class Model{
 
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('UPDATE BRANCH_MASTER SET active = false WHERE id = :id');
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
+            self::$connection->commit();
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
         return $result;
@@ -469,10 +528,13 @@ class Model{
 
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('UPDATE CUSTOMER_INFO SET active = false WHERE id = :id');
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
+            self::$connection->commit();
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
         return $result;
@@ -485,10 +547,13 @@ class Model{
 
         $result = false;
         try{
+            self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('UPDATE PRODUCT_INFO SET active = false WHERE id = :id');
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
+            self::$connection->commit();
         }catch(Exception $e){
+            self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
         return $result;
@@ -500,64 +565,35 @@ class Model{
     // ※※※　共有メソッド　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
     // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
 
-    // 判定式クエリ生成
-    private static function AddJudg($item, $column, &$query){
-        if($item !== ""){
-            if($query !== "")$query .= " AND ";
-               $query .= "${column} = '${item}'";
-        }
-    }
-
     // 活性判定クエリ生成
     private static function AddJudgActive($active, &$query){
         switch($active){
-            case ACTIVE: if($query !== "")$query .= " AND "; $query .= " active = true "; break;
-            case DEACTIVE: if($query !== "")$query .= " AND "; $query .= " active = false "; break;
+            case ACTIVE: $query .= " active = true AND "; break;
+            case DEACTIVE: $query .= " active = false AND "; break;
             case ACTIVE_DEACTIVE: break;
             default: break;
         }
     }
 
     // 範囲指定クエリ生成
-    private static function AddJudgBetween($from,$to,$column,&$query){
-
-        $date_type = 0;
-        if($from !== "")$date_type += DATE_FROM;
-        if($to !== "")$date_type += DATE_TO;
-
-        if(strtotime($to) < strtotime($from))return;
-        
-        switch($date_type){
-            case DATE_FROM:
-                if($query !== "")$query .= " AND ";
-                $query .= " '${from}' < ${column} ";
-                break;
-
-            case DATE_TO:
-                if($query !== "")$query .= " AND ";
-                $query .= " ${column} < '${to}' ";
-                break;
-
-            case DATE_FROM_TO:
-                if($query !== "")$query .= " AND ";
-                $query .= " ${column} BETWEEN '${from}' AND '${to}' ";
-                break;
-
+    private static function AddJudgBetween($column, $type, &$query){
+        switch($type){
+            case DATE_FROM: $query .= " :${column}_from < ${column} AND "; break;
+            case DATE_TO: $query .= " ${column} < :${column}_to AND "; break;
+            case DATE_FROM_TO: $query .= " ${column} BETWEEN :${column}_from AND :${column}_to AND "; break;
             default: break;
         }
     }
 
     // 配列指定クエリ生成
-    private static function AddJudgArray($array, $column, &$query){
+    private static function AddJudgArray($length, $column, &$query){
         $judg_state = "";
-            foreach($array as $item){
-                if($judg_state !== "")$judg_state .= " OR ";
-                $judg_state .= " ${column} = ${item} ";
-            }
-            if($judg_state !== ""){
-                if($query !== "") $query .= " AND ";
-                $query .= " (${judg_state}) ";
-            }
+        for($i = 0; $i < $length; $i++){
+            if($judg_state !== "")$judg_state .= " OR ";
+            $judg_state .= " ${column} = :${column}${i} ";
+        }
+
+        if($judg_state !== "") $query .= " (${judg_state}) AND ";
     }
 
 }

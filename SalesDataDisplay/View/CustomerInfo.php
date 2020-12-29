@@ -16,17 +16,17 @@ $data = Model::getCustomer($id,$name,$match_type);
         <input type="hidden" name="screen_type" value="<?=CUSTOMER?>">
         <table>
         <tr>
-            <td><div class="label01">顧客ID</div></td>
-            <td><input type="text" name="id" value="<?=$id?>" class="inputItem01" maxlength="6"></td>
+            <td><label for="id"><div class="label01">顧客ID</div></label></td>
+            <td><input type="text" name="id" id="id" value="<?=$id?>" class="inputItem01" maxlength="6"></td>
         </tr>
         <tr>
-            <td><div class="label01">名前</div></td>
-            <td><input type="text" name="name" value="<?=$name?>" class="inputItem01" maxlength="40"></td>
+            <td><label for="name"><div class="label01">名前</div></label></td>
+            <td><input type="text" name="name" id="name" value="<?=$name?>" class="inputItem01" maxlength="40"></td>
         </tr>
         <tr>
             <td><div class="label01">一致タイプ</div></td>
-            <td class="terms"><input type="radio" name="match_type" value=<?=PART?> checked>部分一致</td>
-            <td class="terms"><input type="radio" name="match_type" value=<?=PERFECT?>>完全一致</td>
+            <td class="terms"><input type="radio" name="match_type" id="part" value=<?=PART?> checked><label for="part">部分一致</label></td>
+            <td class="terms"><input type="radio" name="match_type" id="perfect" value=<?=PERFECT?>><label for="perfect">完全一致</label></td>
         </tr>
         </table>
         <input type="submit" value="検索" class="btn02">

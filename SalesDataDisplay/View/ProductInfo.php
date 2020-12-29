@@ -18,25 +18,25 @@ $common = Model::getCommon('CATEGORY');
         <input type="hidden" name="screen_type" value="<?=PRODUCT?>">
         <table>
         <tr>
-            <td><div class="label01">商品ID</div></td>
-            <td><input type="text" name="id" value="<?=$id?>" class="inputItem01" maxlength="6"></td>
+            <td><label for="id"><div class="label01">商品ID</div></label></td>
+            <td><input type="text" name="id" id="id" value="<?=$id?>" class="inputItem01" maxlength="6"></td>
         </tr>
         <tr>
-            <td><div class="label01">商品名</div></td>
-            <td><input type="text" name="name" value="<?=$name?>" class="inputItem01" maxlength="40"></td>
+            <td><label for="name"><div class="label01">商品名</div></label></td>
+            <td><input type="text" name="name" id="name" value="<?=$name?>" class="inputItem01" maxlength="40"></td>
         </tr>
         <tr>
             <td><div class="label01">一致タイプ</div></td>
             <td class="terms">
-                <input type="radio" name="match_type" value=<?=PART?> checked>部分一致
-                <input type="radio" name="match_type" value=<?=PERFECT?>>完全一致
+                <input type="radio" name="match_type" id="part" value=<?=PART?> checked><label for="part">部分一致</label>
+                <input type="radio" name="match_type" id="perfect" value=<?=PERFECT?>><label for="perfect">完全一致</label>
             </td>
         </tr>
         <tr>
             <td><div class="label01">カテゴリ</div></td>
             <td class="terms">
                 <?php while ($row = $common->fetch(PDO::FETCH_ASSOC)){ ?>
-                    <input type="checkbox" name="category[]" value="<?=$row["sub_items"]?>" <?php if(in_array($row["sub_items"],$category))echo "checked" ?>><?=$row["name"]?>
+                    <input type="checkbox" name="category[]" id="<?=$row["sub_items"]?>" value="<?=$row["sub_items"]?>" <?php if(in_array($row["sub_items"],$category))echo "checked" ?>><label for="<?=$row["sub_items"]?>"><?=$row["name"]?></label>
                 <?php } ?>
             </td>
         </tr>

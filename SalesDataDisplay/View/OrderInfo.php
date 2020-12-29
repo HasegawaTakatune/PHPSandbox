@@ -21,16 +21,16 @@ $state = Model::getCommon("ORDER_STATE");
         <input type="hidden" name="screen_type" value="<?=ORDER?>">
         <table>
         <tr>
-            <td><div class="label01">注文ID</div></td>
-            <td><input type="text" name="id" value="<?=$id?>" class="inputItem01" maxlength="6"></td>
-            <td><div class="label01">支店ID</div></td>
-            <td><input type="text" name="branch_id" value="<?=$branch_id?>" class="inputItem01" maxlength="6"></td>
+            <td><label for="id"><div class="label01">注文ID</div></label></td>
+            <td><input type="text" name="id" id="id" value="<?=$id?>" class="inputItem01" maxlength="6"></td>
+            <td><label for="branch_id"><div class="label01">支店ID</div></label></td>
+            <td><input type="text" name="branch_id" id="branch_id" value="<?=$branch_id?>" class="inputItem01" maxlength="6"></td>
         </tr>
         <tr>
-            <td><div class="label01">顧客ID</div></td>
-            <td><input type="text" name="customer_id" value="<?=$customer_id?>" class="inputItem01" maxlength="6"></td>
-            <td><div class="label01">輸送ID</div></td>
-            <td><input type="text" name="transport_id" value="<?=$transport_id?>" class="inputItem01" maxlength="6"></td>
+            <td><label for="customer_id"><div class="label01">顧客ID</div></label></td>
+            <td><input type="text" name="customer_id" id="customer_id" value="<?=$customer_id?>" class="inputItem01" maxlength="6"></td>
+            <td><label for="transport_id"><div class="label01">輸送ID</div></label></td>
+            <td><input type="text" name="transport_id" id="transport_id" value="<?=$transport_id?>" class="inputItem01" maxlength="6"></td>
         </tr>
         </table>
         <table>
@@ -46,7 +46,7 @@ $state = Model::getCommon("ORDER_STATE");
             <td><div class="label01">注文ステータス</div></td>
             <td class="terms">
                 <?php while ($row = $state->fetch(PDO::FETCH_ASSOC)){ ?>
-                    <input type="checkbox" name="order_state[]" value="<?=$row["sub_items"]?>" <?php if(in_array($row["sub_items"],$order_state))echo "checked" ?>><?=$row["name"]?>
+                    <input type="checkbox" name="order_state[]" id="<?=$row["sub_items"]?>" value="<?=$row["sub_items"]?>" <?php if(in_array($row["sub_items"],$order_state))echo "checked" ?>><label for="<?=$row["sub_items"]?>"><?=$row["name"]?></label>
                 <?php } ?>
             </td>
         </tr>
