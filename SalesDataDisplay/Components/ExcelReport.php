@@ -1,6 +1,6 @@
 <?php
 
-require_once 'vendor\autoload.php';
+require_once '..\vendor\autoload.php';
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx AS Writer;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx AS Reader;
 use PhpOffice\PhpSpreadsheet\IOFactory AS IOFactory;

@@ -1,8 +1,4 @@
-<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <?php 
-require_once '../config.php';
-require_once '../Model.php';
-require_once '../Message.php';
 
 $id = (isset($_POST['id']) ? $_POST['id'] : "");
 $last_name = (isset($_POST['last_name'])) ? trim($_POST['last_name']) : "";
@@ -26,12 +22,12 @@ $common = Model::getCommon("GENDER");
 ?>
 <div id="content">
     <h2>顧客詳細画面</h2>
-        
-        <?php 
+
+    <?php 
         $row = $data->fetch(PDO::FETCH_ASSOC);
         $is_active = $row["active"];
         ?>
-        <table>
+    <table>
         <form action="" method="POST">
             <tr>
                 <th class="label01">顧客ID</th>
@@ -40,29 +36,31 @@ $common = Model::getCommon("GENDER");
             <tr>
                 <th class="label01">名前</th>
                 <td class="label02">
-                    <input type="text" name="last_name" value="<?=$row["last_name"]?>" style="width: 120px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required>
-                    <input type="text" name="first_name" value="<?=$row["first_name"]?>" style="width: 120px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required>
+                    <input type="text" name="last_name" value="<?=htmlspecialchars($row["last_name"], ENT_QUOTES)?>" style="width: 120px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required>
+                    <input type="text" name="first_name" value="<?=htmlspecialchars($row["first_name"], ENT_QUOTES)?>" style="width: 120px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required>
                 </td>
             </tr>
             <tr>
                 <th class="label01">年齢</th>
-                <td class="label02"><input type="number" name="age" value="<?=$row["age"]?>" style="width: 100px;" min="0" max="200" <?php ActivStyleInp($is_active) ?> required pattern="^[0-9]+$"></td>
+                <td class="label02"><input type="number" name="age" value="<?=$row["age"]?>" style="width: 100px;" min="0" max="200" <?php ActivStyleInp($is_active) ?> required pattern="^[0-9]+$">
+                </td>
             </tr>
             <tr>
                 <th class="label01">性別</th>
                 <td class="terms">
-                <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
+                    <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
                     <input type="radio" name="gender" value="<?=$item["sub_items"]?>" <?php if($item["sub_items"] == $row["gender_code"])echo "checked"; ActivStyle($is_active) ?>><?=$item["name"]?>
-                <?php } ?>
+                    <?php } ?>
                 </td>
             </tr>
             <tr>
                 <th class="label01">メール</th>
-                <td class="label02"><input type="email" name="email" value="<?=$row["email"]?>" style="width: 220px;" <?php ActivStyleInp($is_active) ?> required pattern="<?=PATTERN_EMAIL?>"></td>
+                <td class="label02"><input type="email" name="email" value="<?=htmlspecialchars($row["email"], ENT_QUOTES)?>" style="width: 220px;" <?php ActivStyleInp($is_active) ?> required pattern="<?=PATTERN_EMAIL?>"></td>
             </tr>
             <tr>
                 <th class="label01">電話番号</th>
-                <td class="label02"><input type="text" name="tell" value="<?=$row["tell"]?>" style="width: 120px;" maxlength="15" <?php ActivStyleInp($is_active) ?> required pattern="<?=PATTERN_TELL?>"></td>
+                <td class="label02"><input type="text" name="tell" value="<?=htmlspecialchars($row["tell"], ENT_QUOTES)?>" style="width: 120px;" maxlength="15" <?php ActivStyleInp($is_active) ?> required
+                        pattern="<?=PATTERN_TELL?>"></td>
             </tr>
             <tr>
                 <td>
@@ -72,8 +70,8 @@ $common = Model::getCommon("GENDER");
                     <input type="hidden" name="is_update" value="1">
                 </td>
             </tr>
-            </form>
-            <form action="" method="POST">
+        </form>
+        <form action="" method="POST">
             <tr>
                 <td>
                     <input type="submit" value="削除" onclick="return confirm('削除しますか？')" <?php ActivStyleBtn($is_active) ?>>
@@ -83,6 +81,6 @@ $common = Model::getCommon("GENDER");
                 </td>
             </tr>
         </form>
-        </table>       
-        <?php if($is_update) echo ($result)? MSG_SUCCESS_UPDATE : MSG_FAILED_UPDATE; ?>
+    </table>
+    <?php if($is_update) echo ($result)? MSG_SUCCESS_UPDATE : MSG_FAILED_UPDATE; ?>
 </div>

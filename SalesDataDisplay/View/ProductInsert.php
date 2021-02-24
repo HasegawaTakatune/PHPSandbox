@@ -1,8 +1,4 @@
-<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <?php 
-require_once '../config.php';
-require_once '../Model.php';
-require_once '../Message.php';
 
 $id = (isset($_POST['id'])) ? trim($_POST['id']) : "";
 $name = (isset($_POST['name'])) ? trim($_POST['name']) : "";
@@ -19,8 +15,8 @@ $common = Model::getCommon("CATEGORY");
 ?>
 <div id="content">
     <h2>商品登録画面</h2>
-        <form action="" method="POST">
-        <?php if(!is_null($data)) $row = $data->fetch(PDO::FETCH_ASSOC); ?>       
+    <form action="" method="POST">
+        <?php if(!is_null($data)) $row = $data->fetch(PDO::FETCH_ASSOC); ?>
         <table>
             <tr>
                 <th class="label01">商品ID</th>
@@ -28,17 +24,15 @@ $common = Model::getCommon("CATEGORY");
             </tr>
             <tr>
                 <th class="label01">商品名</th>
-                <td class="label02">
-                    <input type="text" name="name" value="<?=$name?>" style="width: 250px;" class="inputItem01" maxlength="40" required>
-                </td>
+                <td class="label02"><input type="text" name="name" value="<?=htmlspecialchars($name, ENT_QUOTES)?>" style="width: 250px;" class="inputItem01" maxlength="40" required></td>
             </tr>
             <tr>
                 <th class="label01">カテゴリ</th>
                 <td>
                     <select name="category" class="label01" style="margin-left: 5px;" required>
-                    <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
+                        <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
                         <option value="<?=$item["sub_items"]?>" class="label01" <?php if($item["sub_items"] == $category)echo "selected"; ?>><?=$item["name"]?></option>
-                    <?php } ?>
+                        <?php } ?>
                     </select>
                 </td>
             </tr>
@@ -54,6 +48,6 @@ $common = Model::getCommon("CATEGORY");
                 </td>
             </tr>
         </table>
-        </form>
-        <?php if($is_insert) echo (!is_null($row))? MSG_SUCCESS_INSERT : MSG_FAILED_INSERT; ?>
+    </form>
+    <?php if($is_insert) echo (!is_null($row))? MSG_SUCCESS_INSERT : MSG_FAILED_INSERT; ?>
 </div>

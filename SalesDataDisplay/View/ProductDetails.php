@@ -1,8 +1,4 @@
-<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <?php 
-require_once '../config.php';
-require_once '../Model.php';
-require_once '../Message.php';
 
 $id = (isset($_POST['id']) ? $_POST['id'] : "");
 $name = (isset($_POST['name'])) ? trim($_POST['name']) : "";
@@ -23,12 +19,12 @@ $common = Model::getCommon('CATEGORY');
 ?>
 <div id="content">
     <h2>商品詳細画面</h2>
-        
-        <?php 
+
+    <?php 
         $row = $data->fetch(PDO::FETCH_ASSOC);
         $is_active = $row["active"];
         ?>
-        <table>
+    <table>
         <form action="" method="POST">
             <tr>
                 <th class="label01">商品ID</th>
@@ -36,15 +32,15 @@ $common = Model::getCommon('CATEGORY');
             </tr>
             <tr>
                 <th class="label01">商品名</th>
-                <td class="label02"><input type="text" name="name" value="<?=$row["name"]?>" style="width: 120px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required></td>
+                <td class="label02"><input type="text" name="name" value="<?=htmlspecialchars($row["name"], ENT_QUOTES)?>" style="width: 120px;" maxlength="40" <?php ActivStyleInp($is_active) ?> required></td>
             </tr>
             <tr>
                 <th class="label01">カテゴリ</th>
                 <td>
                     <select name="category" class="label01" style="margin-left: 5px;" required>
-                    <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
+                        <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
                         <option value="<?=$item["sub_items"]?>" class="label01" <?php if($item["sub_items"] == $category)echo "selected"; ?>><?=$item["name"]?></option>
-                    <?php } ?>
+                        <?php } ?>
                     </select>
                 </td>
             </tr>
@@ -60,8 +56,8 @@ $common = Model::getCommon('CATEGORY');
                     <input type="hidden" name="is_update" value="1">
                 </td>
             </tr>
-            </form>
-            <form action="" method="POST">
+        </form>
+        <form action="" method="POST">
             <tr>
                 <td>
                     <input type="submit" value="削除" onclick="return confirm('削除しますか？')" <?php ActivStyleBtn($is_active) ?>>
@@ -71,6 +67,6 @@ $common = Model::getCommon('CATEGORY');
                 </td>
             </tr>
         </form>
-        </table>       
-        <?php if($is_update) echo ($result)? MSG_SUCCESS_UPDATE : MSG_FAILED_UPDATE; ?>
+    </table>
+    <?php if($is_update) echo ($result)? MSG_SUCCESS_UPDATE : MSG_FAILED_UPDATE; ?>
 </div>

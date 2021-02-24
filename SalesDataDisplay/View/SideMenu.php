@@ -1,5 +1,8 @@
-<?php require_once('../config.php'); ?>
 <div id="side-menu">
+    <form action="./Login.php" method="POST">
+        <input type="hidden" name="logout" value="1">
+        <input type="submit" value="ログアウト" class="btn01">
+    </form>
     <form action="" method="POST">
         <input type="hidden" name="screen_type" value="<?=HOME?>">
         <input type="submit" value="ホーム" class="btn01">
@@ -24,4 +27,4 @@
         <input type="hidden" name="screen_type" value="<?=REPORT?>">
         <input type="submit" value="帳票" class="btn01">
     </form>
- </div>
+</div>

@@ -1,8 +1,4 @@
-<!-- http://localhost/PHPSandbox/SalesDataDisplay/View/SalesSystem.php -->
 <?php 
-require_once '../config.php';
-require_once '../Model.php';
-require_once '../Message.php';
 
 $last_name = (isset($_POST['last_name'])) ? trim($_POST['last_name']) : "";
 $first_name = (isset($_POST['first_name'])) ? trim($_POST['first_name']) : "";
@@ -21,8 +17,8 @@ $common = Model::getCommon("GENDER");
 ?>
 <div id="content">
     <h2>顧客登録画面</h2>
-        <form action="" method="POST">
-        <?php if(!is_null($data)) $row = $data->fetch(PDO::FETCH_ASSOC); ?>       
+    <form action="" method="POST">
+        <?php if(!is_null($data)) $row = $data->fetch(PDO::FETCH_ASSOC); ?>
         <table>
             <tr>
                 <th class="label01">顧客ID</th>
@@ -31,8 +27,8 @@ $common = Model::getCommon("GENDER");
             <tr>
                 <th class="label01">名前</th>
                 <td class="label02">
-                    <input type="text" name="last_name" value="<?=$last_name?>" style="width: 250px;" class="inputItem01" maxlength="40" required>
-                    <input type="text" name="first_name" value="<?=$first_name?>" style="width: 250px;" class="inputItem01" maxlength="40" required>
+                    <input type="text" name="last_name" value="<?=htmlspecialchars($last_name, ENT_QUOTES)?>" style="width: 250px;" class="inputItem01" maxlength="40" required>
+                    <input type="text" name="first_name" value="<?=htmlspecialchars($first_name, ENT_QUOTES)?>" style="width: 250px;" class="inputItem01" maxlength="40" required>
                 </td>
             </tr>
             <tr>
@@ -42,18 +38,18 @@ $common = Model::getCommon("GENDER");
             <tr>
                 <th class="label01">性別</th>
                 <td class="terms">
-                <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
+                    <?php while ($item = $common->fetch(PDO::FETCH_ASSOC)){ ?>
                     <input type="radio" name="gender" value="<?=$item["sub_items"]?>" <?php if($item["sub_items"] == $gender)echo "checked"; ?> required><?=$item["name"]?>
-                <?php } ?>
+                    <?php } ?>
                 </td>
             </tr>
             <tr>
                 <th class="label01">メール</th>
-                <td class="label02"><input type="email" name="email" value="<?=$email?>" style="width: 220px;" class="inputItem01" required pattern="<?=PATTERN_EMAIL?>"></td>
+                <td class="label02"><input type="email" name="email" value="<?=htmlspecialchars($email, ENT_QUOTES)?>" style="width: 220px;" class="inputItem01" required pattern="<?=PATTERN_EMAIL?>"></td>
             </tr>
             <tr>
                 <th class="label01">電話番号</th>
-                <td class="label02"><input type="text" name="tell" value="<?=$tell?>" style="width: 120px;" maxlength="15" class="inputItem01" required pattern="<?=PATTERN_TELL?>"></td>
+                <td class="label02"><input type="text" name="tell" value="<?=htmlspecialchars($tell, ENT_QUOTES)?>" style="width: 120px;" maxlength="15" class="inputItem01" required pattern="<?=PATTERN_TELL?>"></td>
             </tr>
             <tr>
                 <td>
@@ -63,6 +59,6 @@ $common = Model::getCommon("GENDER");
                 </td>
             </tr>
         </table>
-        </form>
-        <?php if($is_insert) echo (!is_null($row))? MSG_SUCCESS_INSERT : MSG_FAILED_INSERT; ?>
+    </form>
+    <?php if($is_insert) echo (!is_null($row))? MSG_SUCCESS_INSERT : MSG_FAILED_INSERT; ?>
 </div>

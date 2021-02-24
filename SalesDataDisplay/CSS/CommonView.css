@@ -93,11 +93,9 @@ td.label02 {
 
 .label01 {
   background-color: #0e0e0e;
-  /* width: 100px; */
   font-size: 14px;
   font-weight: bold;
-  color: #fff;  
-  /* margin-bottom: 0.5em; */
+  color: #fff;
   padding-left: 1em;
   padding-right: 0.5em;
 }
@@ -199,6 +197,11 @@ td.label02 {
     }
     #content {
       flex-grow: 1;
+    }
+
+    #login {
+      flex-grow: 1;
+      border-left: solid 1px #000;
     }
 
     .err-msg{

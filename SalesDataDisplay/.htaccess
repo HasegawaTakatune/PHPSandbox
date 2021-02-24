@@ -1,0 +1,10 @@
+RewriteEngine on
+
+# RewriteRule ^Home.php$ http://localhost/PHPSandbox/SalesDataDisplay/View/Login.php [L,R=301]
+RewriteRule ^(View|CSS|Components|Reports|Document)(.*)$ http://localhost/PHPSandbox/SalesDataDisplay/Login.php [L,R=301]
+
+Options -Indexes
+
+<Files ~ "\.ini">
+deny from all
+</Files>

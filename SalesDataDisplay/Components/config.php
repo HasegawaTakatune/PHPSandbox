@@ -2,7 +2,7 @@
 // DB情報
 define('DNS','mysql:dbname=sales_system;host=localhost');
 define('USER','root');
-define('PASSWORD',''); //define('PASSWORD','secret');
+define('PASSWORD','');
 
 // 画面名
 define('HOME',1);
