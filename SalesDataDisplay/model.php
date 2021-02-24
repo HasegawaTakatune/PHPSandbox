@@ -38,14 +38,57 @@ class Model{
         self::$connection = null;
     }
 
+
+
     // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
     // ※※※　データ取得（SELECT）　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
     // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
 
+    // ユーザ名存在確認
+    public static function existUserName($name){
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return true;
+
+        $result = true;
+        try{
+            $stmt = self::$connection->prepare('SELECT count(*) AS CNT FROM SYS_USER WHERE name = :name');
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = (0 < intval($row['CNT'])) ? true : false;
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        self::CloseConnect();
+        return $result;
+    }
+
+    // メールアドレス存在確認
+    public static function existUserEmail($email){
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return true;
+
+        $result = true;
+        try{
+            $stmt = self::$connection->prepare('SELECT count(*) AS CNT FROM SYS_USER WHERE email = :email');
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = (0 < intval($row['CNT'])) ? true : false;
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        self::CloseConnect();
+        return $result;
+    }
+
     // 顧客情報取得
     public static function getCustomer($id = "", $name = "", $match_type = PART, $active = ACTIVE_DEACTIVE){
         
-        if(is_null(self::$connection))return null;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -84,13 +127,15 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $stmt;
     }
 
     // 支店情報取得
     public static function getBranch($id = "", $name = "", $match_type = PART, $active = ACTIVE_DEACTIVE){
         
-        if(is_null(self::$connection))return null;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -122,13 +167,15 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $stmt;
     }
 
     // 注文情報取得
     public static function getOrder($id = "", $branch_id = "", $customer_id = "", $transport_id = "", $order_date_from = "", $order_date_to = "", $order_state = array()){
         
-        if(is_null(self::$connection))return null;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -179,13 +226,15 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $stmt;
     }
 
     // 注文明細取得
     public static function getOrderDetails($id){
-        
-        if(is_null(self::$connection))return -1;
+
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -223,13 +272,15 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $stmt;
     }
 
     // 注文基本情報取得
     public static function getOrderBaseInfo($id){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -262,13 +313,15 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $stmt;
     }
 
     // 商品情報取得
     public static function getProduct($id = "", $name = "", $match_type = PART, $category = array(), $active = ACTIVE_DEACTIVE){
         
-        if(is_null(self::$connection))return null;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -305,13 +358,33 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
+        return $stmt;
+    }
+
+    // ユーザ情報取得
+    public static function getUser($email){
+        
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
+
+        $stmt = null;
+        try{
+            $stmt = self::$connection->prepare('SELECT id, email, name, password FROM SYS_USER WHERE email = :email');
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        self::CloseConnect();
         return $stmt;
     }
 
     // 共通データ取得    
     public static function getCommon($category){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -321,13 +394,15 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $stmt;
     }
 
     // 通知情報取得
     public static function getNotice(){
 
-        if(is_null(self::$connection))return null;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $stmt = null;
         try{
@@ -336,6 +411,7 @@ class Model{
         }catch(Exception $e){
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $stmt;
     }
 
@@ -348,7 +424,8 @@ class Model{
     // 支店情報更新
     public static function updBranch($id, $name, $abbreviation){
 
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return false;
 
         $result = false;
         try{
@@ -363,13 +440,15 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $result;
     }
 
     // 顧客情報更新
     public static function updCustomer($id, $last_name, $first_name, $age, $gender, $email, $tell){
 
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return false;
 
         $result = false;
         try{
@@ -388,13 +467,15 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $result;
     }
 
     // 商品情報更新
     public static function updProduct($id, $name, $category, $price){
 
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return false;
 
         $result = false;
         try{
@@ -410,6 +491,7 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $result;
     }
 
@@ -422,10 +504,10 @@ class Model{
     // 支店情報新規登録
     public static function instBranch($name, $abbreviation){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $data = null;
-        $result = false;
         try{
             self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('INSERT INTO BRANCH_MASTER (name, abbreviation, active) VALUES(:name, :abbreviation, true)');
@@ -440,16 +522,17 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage());
         }
+        self::CloseConnect();
         return $data;
     }
 
     // 顧客情報新規登録
     public static function instCustomer($last_name, $first_name, $age, $gender, $email, $tell){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $data = null;
-        $result = false;
         try{
             self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('INSERT INTO CUSTOMER_INFO (last_name, first_name, age, gender, email, tell, active) VALUES(:last_name, :first_name, :age, :gender, :email, :tell, true)');
@@ -468,16 +551,17 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage());
         }
+        self::CloseConnect();
         return $data;
     }
 
     // 商品情報新規登録
     public static function instProduct($name, $category, $price){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
 
         $data = null;
-        $result = false;
         try{
             self::$connection->beginTransaction();
             $stmt = self::$connection->prepare('INSERT INTO PRODUCT_INFO (name, category_code, price, active) VALUES(:name, :category, :price, true)');
@@ -493,6 +577,35 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage());
         }
+        self::CloseConnect();
+        return $data;
+    }
+
+    // ユーザ情報新規登録
+    public static function instUser($email, $name, $password){
+        
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
+
+        $data = null;
+        try{
+            $hash = password_hash($password, PASSWORD_BCRYPT);
+
+            self::$connection->beginTransaction();
+            $stmt = self::$connection->prepare('INSERT INTO SYS_USER (email, name, password) VALUES(:email, :name, :password)');
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $hash, PDO::PARAM_STR);
+            $result = $stmt->execute();
+            self::$connection->commit();
+
+            if($result)
+                $data = self::$connection->query('SELECT * FROM SYS_USER ORDER BY id DESC LIMIT 1');
+        }catch(Exception $e){
+            self::$connection->rollback();
+            error_log($e->getMessage());
+        }
+        self::CloseConnect();
         return $data;
     }
 
@@ -505,7 +618,8 @@ class Model{
     // 支店情報削除
     public static function dltBranch($id){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return false;
 
         $result = false;
         try{
@@ -518,13 +632,15 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $result;
     }
 
     // 顧客情報削除
     public static function dltCustomer($id){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return false;
 
         $result = false;
         try{
@@ -537,13 +653,15 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $result;
     }
 
     // 商品情報削除
     public static function dltProduct($id){
         
-        if(is_null(self::$connection))return -1;
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return false;
 
         $result = false;
         try{
@@ -556,6 +674,7 @@ class Model{
             self::$connection->rollback();
             error_log($e->getMessage(), 1);
         }
+        self::CloseConnect();
         return $result;
     }
 
@@ -594,6 +713,47 @@ class Model{
         }
 
         if($judg_state !== "") $query .= " (${judg_state}) AND ";
+    }
+
+
+
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※　帳票データ　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+    // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
+
+    public static function getOrderInfo($year){
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
+
+        $stmt = null;
+        try{
+            $query = " SELECT 
+            ODR.id AS order_id, ODR.order_date AS order_date, 
+            PRD.id AS product_id, PRD.name AS product_name, PRD.price, 
+            CST.id AS customer_id, CST.last_name, CST.first_name, 
+            BRCH.id AS branch_id, BRCH.name AS branch_name 
+
+            FROM ORDER_INFO AS INF 
+            LEFT JOIN ORDER_DETAILS AS DTL 
+            ON DTL.order_id = INF.id 
+            LEFT JOIN PRODUCT_INFO AS PRD 
+            ON PRD.id = DTL.product_id 
+            LEFT JOIN CUSTOMER_INFO AS CST 
+            ON CST.id = INF.customer_id 
+            LEFT JOIN BRANCH_MASTER AS BRCH 
+            ON BRCH.id = INF.branch_id
+
+            WHERE YEAR(ODR.order_date) = :year ";
+
+            $stmt = self::$connection->prepare($query);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+            $stmt->execute();
+
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        self::CloseConnect();
+        return $stmt;
     }
 
 }
