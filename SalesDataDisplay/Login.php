@@ -69,7 +69,7 @@ $(function(){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href=".\CSS\CommonView.css" rel="stylesheet">
+    <link type="text/css" href="./CSS/CommonView.css" rel="stylesheet">
     <title>ログイン</title>
 </head>
 

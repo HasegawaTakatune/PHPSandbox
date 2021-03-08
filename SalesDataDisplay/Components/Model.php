@@ -721,6 +721,7 @@ class Model{
     // ※※※　帳票データ　※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
     // ※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※ //
 
+    // 注文情報取得
     public static function getOrderInfo($year){
         if(is_null(self::$connection))
             if(!self::StartConnect())return null;
@@ -728,8 +729,8 @@ class Model{
         $stmt = null;
         try{
             $query = " SELECT 
-            ODR.id AS order_id, ODR.order_date AS order_date, 
-            PRD.id AS product_id, PRD.name AS product_name, PRD.price, 
+            INF.id AS order_id, INF.order_date AS order_date, 
+            PRD.id AS product_id, PRD.name AS product_name, PRD.price, CMN.name AS category,
             CST.id AS customer_id, CST.last_name, CST.first_name, 
             BRCH.id AS branch_id, BRCH.name AS branch_name 
 
@@ -742,11 +743,59 @@ class Model{
             ON CST.id = INF.customer_id 
             LEFT JOIN BRANCH_MASTER AS BRCH 
             ON BRCH.id = INF.branch_id
+            LEFT JOIN COMMON_MASTER AS CMN
+            ON CMN.major_items = 'CATEGORY'
+            AND CMN.sub_items = PRD.category_code
 
-            WHERE YEAR(ODR.order_date) = :year ";
+            WHERE YEAR(INF.order_date) = :year 
+            
+            ORDER BY INF.id, INF.order_date, PRD.id";
 
             $stmt = self::$connection->prepare($query);
             $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+            $stmt->execute();
+
+        }catch(Exception $e){
+            error_log($e->getMessage(), 1);
+        }
+        self::CloseConnect();
+        return $stmt;
+    }
+
+    // 支店別注文情報取得
+    public static function getOrderInfoByBranch($year, $branch_id){
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
+
+        $stmt = null;
+        try{
+            $query = " SELECT 
+            INF.id AS order_id, INF.order_date AS order_date, 
+            PRD.id AS product_id, PRD.name AS product_name, PRD.price, CMN.name AS category,
+            CST.id AS customer_id, CST.last_name, CST.first_name, 
+            BRCH.id AS branch_id, BRCH.name AS branch_name 
+
+            FROM ORDER_INFO AS INF 
+            LEFT JOIN ORDER_DETAILS AS DTL 
+            ON DTL.order_id = INF.id 
+            LEFT JOIN PRODUCT_INFO AS PRD 
+            ON PRD.id = DTL.product_id 
+            LEFT JOIN CUSTOMER_INFO AS CST 
+            ON CST.id = INF.customer_id 
+            LEFT JOIN BRANCH_MASTER AS BRCH 
+            ON BRCH.id = INF.branch_id
+            LEFT JOIN COMMON_MASTER AS CMN
+            ON CMN.major_items = 'CATEGORY'
+            AND CMN.sub_items = PRD.category_code
+
+            WHERE YEAR(INF.order_date) = :year 
+            AND BRCH.id = :branch_id
+            
+            ORDER BY BRCH.id, INF.id, INF.order_date, PRD.id";
+
+            $stmt = self::$connection->prepare($query);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+            $stmt->bindParam(':branch_id', $branch_id, PDO::PARAM_STR);
             $stmt->execute();
 
         }catch(Exception $e){

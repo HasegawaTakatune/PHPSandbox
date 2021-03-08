@@ -43,7 +43,7 @@ define('DELIVERED','2');
 // define('ORDER_STATE','ORDER_STATE');
 
 // デバッグ
-define('IS_DEBUG',false);
+define('IS_DEBUG',true);
 
 // 正規表現
 define('PATTERN_TELL','^0[789]0-[0-9]{4}-[0-9]{4}$');
