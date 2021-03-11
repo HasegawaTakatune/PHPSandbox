@@ -2,6 +2,12 @@
 require_once './Components/Model.php';
 require_once './Components/Message.php';
 
+// ログファイル生成
+$now = date('Ymd');
+if(!file_exists("./log/{$now}")){
+    file_put_contents("./log/{$now}.log", "※※※ {$now} logs ※※※※※※※※※※※");
+}
+
 session_start();
 
 if(isset($_POST['logout'])){

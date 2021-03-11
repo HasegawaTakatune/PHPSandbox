@@ -26,7 +26,8 @@ class Model{
                 PDO::ATTR_PERSISTENT => true
             ]);
         }catch(PDOException $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
             $result = false;
         }
 
@@ -58,7 +59,8 @@ class Model{
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $result = (0 < intval($row['CNT'])) ? true : false;
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -78,7 +80,8 @@ class Model{
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $result = (0 < intval($row['CNT'])) ? true : false;
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -125,7 +128,8 @@ class Model{
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -165,7 +169,8 @@ class Model{
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -224,7 +229,8 @@ class Model{
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -270,7 +276,8 @@ class Model{
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -311,7 +318,8 @@ class Model{
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -356,7 +364,8 @@ class Model{
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -374,7 +383,8 @@ class Model{
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -392,7 +402,8 @@ class Model{
             $stmt->bindValue(':category', $category, PDO::PARAM_STR);
             $stmt->execute();
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -409,7 +420,8 @@ class Model{
             $stmt = self::$connection->prepare(' SELECT * FROM NOTICE_MASTER ');
             $stmt->execute();
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -438,7 +450,8 @@ class Model{
             self::$connection->commit();
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -465,7 +478,8 @@ class Model{
             self::$connection->commit();
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -489,7 +503,8 @@ class Model{
             self::$connection->commit();
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -520,7 +535,8 @@ class Model{
                 $data = self::$connection->query('SELECT * FROM BRANCH_MASTER ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage());
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $data;
@@ -549,7 +565,8 @@ class Model{
                 $data = self::$connection->query('SELECT * FROM CUSTOMER_INFO ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage());
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $data;
@@ -575,7 +592,8 @@ class Model{
                 $data = self::$connection->query('SELECT * FROM PRODUCT_INFO ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage());
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $data;
@@ -603,7 +621,8 @@ class Model{
                 $data = self::$connection->query('SELECT * FROM SYS_USER ORDER BY id DESC LIMIT 1');
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage());
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $data;
@@ -630,7 +649,8 @@ class Model{
             self::$connection->commit();
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -651,7 +671,8 @@ class Model{
             self::$connection->commit();
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -672,7 +693,8 @@ class Model{
             self::$connection->commit();
         }catch(Exception $e){
             self::$connection->rollback();
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $result;
@@ -749,14 +771,15 @@ class Model{
 
             WHERE YEAR(INF.order_date) = :year 
             
-            ORDER BY INF.id, INF.order_date, PRD.id";
+            ORDER BY INF.id, INF.order_date, PRD.id, PRD.category_code";
 
             $stmt = self::$connection->prepare($query);
             $stmt->bindParam(':year', $year, PDO::PARAM_STR);
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;
@@ -769,6 +792,8 @@ class Model{
 
         $stmt = null;
         try{
+            $judg = ($branch_id != "") ? "AND BRCH.id = :branch_id" : "";
+
             $query = " SELECT 
             INF.id AS order_id, INF.order_date AS order_date, 
             PRD.id AS product_id, PRD.name AS product_name, PRD.price, CMN.name AS category,
@@ -789,17 +814,136 @@ class Model{
             AND CMN.sub_items = PRD.category_code
 
             WHERE YEAR(INF.order_date) = :year 
-            AND BRCH.id = :branch_id
-            
-            ORDER BY BRCH.id, INF.id, INF.order_date, PRD.id";
+            {$judg}
+            ORDER BY BRCH.id, INF.id, INF.order_date, PRD.category_code, PRD.id";
 
             $stmt = self::$connection->prepare($query);
             $stmt->bindParam(':year', $year, PDO::PARAM_STR);
-            $stmt->bindParam(':branch_id', $branch_id, PDO::PARAM_STR);
+            if($branch_id != "") $stmt->bindParam(':branch_id', $branch_id, PDO::PARAM_STR);
             $stmt->execute();
 
         }catch(Exception $e){
-            error_log($e->getMessage(), 1);
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
+        }
+        self::CloseConnect();
+        return $stmt;
+    }
+
+    // カテゴリ別注文情報取得
+    public static function getOrderInfoByCategory($year, $category_code){
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
+
+        $stmt = null;
+        try{
+            $judg = ($category_code != "") ? "AND PRD.category_code = :category_code" : "";
+            $query = " SELECT 
+            INF.id AS order_id, INF.order_date AS order_date, 
+            PRD.id AS product_id, PRD.name AS product_name, PRD.price, PRD.category_code, CMN.name AS category,
+            CST.id AS customer_id, CST.last_name, CST.first_name, 
+            BRCH.id AS branch_id, BRCH.name AS branch_name 
+
+            FROM ORDER_INFO AS INF 
+            LEFT JOIN ORDER_DETAILS AS DTL 
+            ON DTL.order_id = INF.id 
+            LEFT JOIN PRODUCT_INFO AS PRD 
+            ON PRD.id = DTL.product_id 
+            LEFT JOIN CUSTOMER_INFO AS CST 
+            ON CST.id = INF.customer_id 
+            LEFT JOIN BRANCH_MASTER AS BRCH 
+            ON BRCH.id = INF.branch_id
+            LEFT JOIN COMMON_MASTER AS CMN
+            ON CMN.major_items = 'CATEGORY'
+            AND CMN.sub_items = PRD.category_code
+
+            WHERE YEAR(INF.order_date) = :year 
+            {$judg}
+            ORDER BY PRD.category_code, INF.id, INF.order_date, BRCH.id, PRD.id";
+
+            $stmt = self::$connection->prepare($query);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+            if($category_code != "") $stmt->bindParam(':category_code', $category_code, PDO::PARAM_STR);
+            $stmt->execute();
+
+        }catch(Exception $e){
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
+        }
+        self::CloseConnect();
+        return $stmt;
+    }
+
+    // 顧客別注文情報取得
+    public static function getOrderInfoByCustomer($year, $age_from, $age_to, $gender){
+        if(is_null(self::$connection))
+            if(!self::StartConnect())return null;
+
+        $stmt = null;
+        try{
+
+            $judg = "";
+            $type = 0;
+            if(!empty($age_from) && 0 < $age_from) $type += DATE_FROM;
+            if(!empty($age_to) && 0 < $age_to) $type += DATE_TO;
+            switch($type){
+                case DATE_FROM: $judg .= " AND :age_from < CST.age "; break;
+                case DATE_TO: $judg .= " AND CST.age < :age_to "; break;
+                case DATE_FROM_TO: $judg .= " AND CST.age BETWEEN :age_from AND :age_to "; break;
+                default: break;
+            }
+
+            $length = count($gender);
+            $judg_state = "";
+            for($i = 0; $i < $length; $i++){
+                if($judg_state !== "")$judg_state .= " OR ";
+                $judg_state .= " CST.gender_code = :gender${i} ";
+            }
+            if($judg_state !== "") $judg .= " AND (${judg_state}) ";
+
+            $query = " SELECT 
+            INF.id AS order_id, INF.order_date AS order_date, 
+            PRD.id AS product_id, PRD.name AS product_name, PRD.price, PRD.category_code, CMN.name AS category,
+            CST.id AS customer_id, CST.last_name, CST.first_name, CST.age, GND.name AS gender,
+            BRCH.id AS branch_id, BRCH.name AS branch_name 
+
+            FROM ORDER_INFO AS INF 
+            LEFT JOIN ORDER_DETAILS AS DTL 
+            ON DTL.order_id = INF.id 
+            LEFT JOIN PRODUCT_INFO AS PRD 
+            ON PRD.id = DTL.product_id 
+            LEFT JOIN CUSTOMER_INFO AS CST 
+            ON CST.id = INF.customer_id 
+            LEFT JOIN BRANCH_MASTER AS BRCH 
+            ON BRCH.id = INF.branch_id
+            LEFT JOIN COMMON_MASTER AS CMN
+            ON CMN.major_items = 'CATEGORY'
+            AND CMN.sub_items = PRD.category_code
+            LEFT JOIN COMMON_MASTER AS GND
+            ON GND.major_items = 'GENDER'
+            AND GND.sub_items = CST.gender_code
+
+            WHERE YEAR(INF.order_date) = :year 
+            {$judg}
+            ORDER BY CST.id, INF.id, INF.order_date, BRCH.id, PRD.category_code, PRD.id";
+
+            $stmt = self::$connection->prepare($query);
+            $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+            switch($type){
+                case DATE_FROM: $stmt->bindParam(':age_from', $age_from, PDO::PARAM_STR); break;                
+                case DATE_TO: $stmt->bindParam(':age_to', $age_to, PDO::PARAM_STR); break;
+                case DATE_FROM_TO: 
+                    $stmt->bindParam(':age_from', $age_from, PDO::PARAM_STR);
+                    $stmt->bindParam(':age_to', $age_to, PDO::PARAM_STR); 
+                    break;
+                default: break;
+            }
+            for($i = 0; $i < $length; $i++)$stmt->bindParam(":gender${i}", $gender[$i], PDO::PARAM_STR);
+            $stmt->execute();
+
+        }catch(Exception $e){
+            $now = date('Ymd');
+            error_log(print_r($e->getMessage() . "\n",true),"3","./log/{$now}.log");
         }
         self::CloseConnect();
         return $stmt;

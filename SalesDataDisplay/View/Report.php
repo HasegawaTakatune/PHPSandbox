@@ -1,9 +1,10 @@
 <?php 
 
-define('ORDER_INFO', 0);
-define('BRANCH_ORDER', 1);
-define('CATEGORY_ORDER', 2);
-define('CUSTOMER_ORDER',3);
+define('COVER', 0);
+define('ORDER_INFO', 1);
+define('BRANCH_ORDER', 2);
+define('CATEGORY_ORDER', 3);
+define('CUSTOMER_ORDER',4);
 
 define('FULL_ORDER',1);
 
@@ -24,8 +25,6 @@ $minYear = 1990;
 if(isset($_POST['output'])){
     ExcelReport::init($report, $year, $branch, $category, $age_from, $age_to, $gender);
     ExcelReport::OutputReport();
-    // ExcelReport::ReportOrderInfo();
-    debug_zval_dump($report);
 }
 
 ?>
@@ -48,7 +47,7 @@ if(isset($_POST['output'])){
                     </label></td>
                 <td>
                     <select name="branch_list" id="branch_list" class="label01">
-                        <!-- <option value=""></option> -->
+                        <option value=""></option>
                         <?php while($row = $branch_list->fetch(PDO::FETCH_ASSOC)){ ?>
                         <option value="<?=$row["id"]?>" class="label01"><?=$row["name"]?></option>
                         <?php } ?>
@@ -62,7 +61,7 @@ if(isset($_POST['output'])){
                     </label></td>
                 <td>
                     <select name="category_list" id="category_list" class="label01">
-                        <!-- <option value=""></option> -->
+                        <option value=""></option>
                         <?php while($row = $category_list->fetch(PDO::FETCH_ASSOC)){ ?>
                         <option value="<?=$row["sub_items"]?>" class="label01"><?=$row["name"]?></option>
                         <?php } ?>
