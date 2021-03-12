@@ -75,7 +75,7 @@ class ExcelReport{
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer = new Writer($spreadsheet);
         $writer->save('php://output');
-
+        die;
     }
 
     // 注文情報出力
