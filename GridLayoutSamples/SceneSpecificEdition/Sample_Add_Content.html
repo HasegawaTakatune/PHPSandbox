@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script>
+        const MIN_CODE = 97;
+        const MAX_CODE = 122;
+        const MIN_COLOR = 0;
+        const MAX_COLOR = 255;
+        const RED = 0;
+        const GREEN = 1;
+        const BLUE = 2;
+
+        var sub = 20;
+        var code = 97;
+        var R = 255;
+        var G = 255;
+        var B = 255;
+
+        function AddContent() {
+            var container = document.getElementById('container');
+            var element = document.createElement('div');
+            element.textContent = String.fromCharCode(code);
+
+            if (MAX_CODE <= code) code = MIN_CODE;
+            else code++;
+
+            switch (Math.floor(Math.random() * 3)) {
+                case RED: R = (R - sub <= 190) ? 255 : R - sub; break;
+                case GREEN: G = (G - sub <= 190) ? 255 : G - sub; break;
+                case BLUE: B = (B - sub <= 190) ? 255 : B - sub; break;
+                default: break;
+            }
+            element.style.backgroundColor = `rgb(${R},${G},${B})`;
+
+            container.appendChild(element);
+        }
+    </script>
+    <meta charset="utf-8">
+    <title>Sample Add Content</title>
+    <link rel="stylesheet" href="./Sample_Add_Content.css">
+</head>
+
+<body>
+    <h1>Sample Add Content</h1>
+    <input type="button" value="add" onclick="AddContent();">
+    <div id="container"> </div>
+</body>
+
+</html>

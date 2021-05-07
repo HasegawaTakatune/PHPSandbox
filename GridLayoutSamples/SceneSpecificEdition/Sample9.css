@@ -1,0 +1,103 @@
+#container {
+    display              : grid;
+    grid-template-rows   : repeat(2, 100px 50px) 100px;
+    grid-template-columns: repeat(5, 100px);
+}
+
+#container * {
+    display    : grid;
+    place-items: center;
+    font-size  : large;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;
+}
+
+#container2 {
+    display              : grid;
+    grid-template-rows   : repeat(2, 100px 50px) 100px;
+    grid-template-columns: repeat(auto-fill, 100px);
+    justify-content      : center;
+}
+
+#container2 * {
+    display     : grid;
+    place-items : center;
+    font-size   : large;
+    font-weight : 600;
+    text-shadow : 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;
+    border      : 2px solid;
+    border-color: fuchsia;
+}
+
+#container3 {
+    display              : grid;
+    grid-template-rows   : repeat(2, 100px 50px) 100px;
+    grid-template-columns: repeat(auto-fit, 100px);
+    justify-content      : center;
+}
+
+#container3 * {
+    display     : grid;
+    place-items : center;
+    font-size   : large;
+    font-weight : 600;
+    text-shadow : 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;
+    border      : 2px solid;
+    border-color: fuchsia;
+}
+
+#A {
+    background: #7fffff;
+}
+
+#B {
+    background: #7fffbf;
+}
+
+#C {
+    background: #7fff7f;
+}
+
+#D {
+    background: #bfff7f;
+}
+
+#E {
+    background: #ffff7f;
+}
+
+#F {
+    background: #ffbf7f;
+}
+
+#G {
+    background: #ff7f7f;
+}
+
+#H {
+    background: #7f7fff;
+}
+
+#I {
+    background: #ff7fbf;
+}
+
+#J {
+    background: #ff7fff;
+}
+
+#K {
+    background: #bf7fff;
+}
+
+#L {
+    background: #7fbfff;
+}
+
+#N {
+    background: #b5b5ac;
+}
+
+#M {
+    background: #009bbf;
+}

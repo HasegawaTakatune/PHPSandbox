@@ -1,0 +1,158 @@
+#container {
+    display              : grid;
+    width                : 500px;
+    height               : 300px;
+    grid-template-rows   : 100px 100px;
+    grid-template-columns: 100px 100px 100px;
+    border               : 2px solid;
+    border-color         : black;
+}
+
+.container * {
+    display    : grid;
+    place-items: center;
+}
+
+.item-box {
+    border      : 2px solid;
+    border-color: rgb(187, 184, 184);
+}
+
+.item-center-end {
+    display      : grid;
+    justify-items: center;
+    align-items  : end;
+}
+
+.item-A {
+    justify-self: start;
+    align-self  : start;
+}
+
+.item-B {
+    justify-self: center;
+    align-self  : start;
+}
+
+.item-C {
+    justify-self: end;
+    align-self  : start;
+}
+
+.item-D {
+    justify-self: start;
+    align-self  : center;
+}
+
+.item-E {
+    justify-self: center;
+    align-self  : center;
+}
+
+.item-F {
+    justify-self: end;
+    align-self  : center;
+}
+
+.item-G {
+    justify-self: start;
+    align-self  : end;
+}
+
+.item-H {
+    justify-self: center;
+    align-self  : end;
+}
+
+.item-I {
+    justify-self: end;
+    align-self  : end;
+}
+
+.margin-A {
+    margin: 10px 20px 30px 10px;
+}
+
+.margin-B {
+    margin: 10px -20px -30px 10px;
+}
+
+.container-position {
+    position             : relative;
+    display              : grid;
+    width                : 500px;
+    height               : 300px;
+    grid-template-rows   : 100px 100px;
+    grid-template-columns: 100px 100px 100px;
+    border               : 2px solid;
+    border-color         : black;
+}
+
+.position-A {
+    position   : absolute;
+    grid-row   : 1 / 3;
+    grid-column: 2 / 4;
+    top        : 40px;
+    bottom     : 40px;
+    left       : 40px;
+    right      : 40px;
+    opacity    : .8;
+}
+
+.position-C {
+    z-index: 1;
+}
+
+.position-H {
+    position   : absolute;
+    grid-row   : 1 / 3;
+    grid-column: 1 / 3;
+    top        : 60px;
+    bottom     : 60px;
+    left       : 60px;
+    right      : 40px;
+    opacity    : .8;
+    z-index    : 1;
+}
+
+.my-font * {
+    font-size  : large;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgb(83, 83, 83);
+}
+
+.A {
+    background: rgba(127, 255, 255, 0.8);
+}
+
+.B {
+    background: rgba(127, 255, 191, 0.8);
+}
+
+.C {
+    background: rgba(127, 255, 127, 0.8);
+}
+
+.D {
+    background: rgba(191, 255, 127, 0.8);
+}
+
+.E {
+    background: rgba(255, 255, 127, 0.8);
+}
+
+.F {
+    background: rgba(255, 191, 127, 0.8);
+}
+
+.G {
+    background: rgba(255, 127, 127, 0.8);
+}
+
+.H {
+    background: rgba(127, 127, 255, 0.8);
+}
+
+.I {
+    background: rgba(255, 127, 191, 0.8);
+}

@@ -1,0 +1,41 @@
+#container {
+    display              : grid;
+    grid-template-rows   : 100px 100px;
+    grid-template-columns: 100px 100px 100px;
+}
+
+#container * {
+    display    : grid;
+    place-items: center;
+    font-size  : large;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;
+}
+
+#A {
+    background: #7fffff;
+}
+
+#B {
+    grid-row   : 1;
+    grid-column: 1;
+    background : #7fffbf;
+}
+
+#C {
+    background: #7fff7f;
+}
+
+#D {
+    grid-row   : 2;
+    grid-column: 2;
+    background : #bfff7f;
+}
+
+#E {
+    background: #ffff7f;
+}
+
+#F {
+    background: #ffbf7f;
+}
