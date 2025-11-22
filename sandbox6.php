@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Sword</title>
 </head>
+
 <body>
 
-<h1>妖刀一覧</h1>
-<form action="./sandbox6_tables.php" method="POST" style="display: flex; flex-direction: column;">
+  <h1>妖刀一覧</h1>
+  <form action="./sandbox6_tables.php" method="POST" style="display: flex; flex-direction: column;">
     <input type="text" name="items[]" value="村正（むらまさ）" readonry>
     <input type="text" name="items[]" value="正宗（まさむね）" readonry>
     <input type="text" name="items[]" value="宗三左文字（そうざさもんじ）" readonry>
@@ -29,6 +31,6 @@
     <input type="text" name="items[]" value="岩通（いわとおし）" readonry>
     <input type="text" name="items[]" value="大包平（おおかねひら）" readonry>
     <input type="submit" value="一覧取得">
-</form>
+  </form>
 
 </body>
