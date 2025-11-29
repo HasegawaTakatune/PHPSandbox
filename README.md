@@ -16,17 +16,7 @@ SalesDataDisplayフォルダ下はWebアプリの練習用に作成したモノ�
 - サーバ Apache 2.4.46  
 - データベース mysql 10.4.17  
 - ライブラリ PHPSpreadsheet 1.15  
-** 注意 **  
-ライブラリの取得にはComposerを使用してSalesDataDisplayフォルダ配下にvendorフォルダを  
-配置して使用しています。  
-  
-## ファイル構成図  
-![SalesDataDisplay_Directory](https://user-images.githubusercontent.com/17695962/110878560-c27a8900-831e-11eb-8b37-46b751e0cb1e.png)
-
-  
-## システム関係図  
-![SalesDataDisplay_Infra](https://user-images.githubusercontent.com/17695962/110878467-9a8b2580-831e-11eb-8f3f-76a9157adaaa.png)
-  
+    
 ## 画面フロー  
 ![SalesDataDisplay_ScreenFlow](https://user-images.githubusercontent.com/17695962/110878525-ad9df580-831e-11eb-871a-1384a7f8760c.png)
 
